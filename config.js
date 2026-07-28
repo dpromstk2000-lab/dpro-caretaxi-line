@@ -1,11 +1,11 @@
 /**
  * DPRO 介護タクシー LINE
- * STEP CARETAXI-3 公開設定
+ * STEP CARETAXI-6 公開設定
  * 秘密鍵・Service Role Key・LINE Channel Secretは絶対に記載しないこと。
  */
 window.CARETAXI_CONFIG = Object.freeze({
   APP_NAME: "DPRO 介護タクシー LINE",
-  VERSION: "CARETAXI-5-ADMIN-PC-20260728",
+  VERSION: "CARETAXI-6-OWNER-IPAD-20260728",
   API_BASE_URL: "https://dpro-caretaxi-line-api.dpromstk2000.workers.dev",
   ORGANIZATION_CODE: "dpro_caretaxi_demo",
   LIFF_ID: "",

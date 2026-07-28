@@ -43,7 +43,8 @@
     h1 { margin: 2px 0 0; font-size: clamp(1.55rem, 5vw, 2.25rem); line-height: 1.28; }
     .hero-copy { margin: 14px 0 0; font-size: 1rem; opacity: .94; max-width: 780px; }
     .status-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-    .status-pill { padding: 5px 10px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; font-size: .82rem; background: rgba(255,255,255,.1); }
+    .status-pill { padding: 5px 10px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; font-size: .82rem; background: rgba(255,255,255,.1); color: #fff; text-decoration: none; }
+    a.status-pill:hover { background: rgba(255,255,255,.2); }
     .main { padding: 18px 14px 110px; }
     .notice { border-radius: 14px; padding: 13px 15px; margin-bottom: 14px; font-weight: 650; }
     .notice.info { background: var(--primary-soft); color: var(--primary-dark); border: 1px solid #b9d9d6; }
@@ -148,6 +149,7 @@
         <span class="status-pill" id="connectionStatus">接続確認中</span>
         <span class="status-pill">希望時間は30分単位</span>
         <span class="status-pill">送信だけでは予約確定ではありません</span>
+        <a class="status-pill" href="./member.html">予約履歴・ご利用者情報</a>
       </div>
     </div>
   </header>
@@ -370,6 +372,7 @@
   async function initialize() {
     bindEvents();
     restoreDraft();
+    applyRepeatPrefill();
     updateSamePerson();
     updateAssistanceDetails();
     updatePassengerExtraDetails();
@@ -728,6 +731,38 @@
       localStorage.setItem(CONFIG.DRAFT_STORAGE_KEY, JSON.stringify(data));
       if (showMessage) showNotice("入力途中の内容をこの端末に保存しました。", "success");
     } catch { if (showMessage) showNotice("下書きを保存できませんでした。", "error"); }
+  }
+
+  function applyRepeatPrefill() {
+    try {
+      const key = CONFIG.REPEAT_PREFILL_KEY || "dpro_caretaxi_repeat_prefill_v1";
+      const raw = localStorage.getItem(key);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      localStorage.removeItem(key);
+      const radioNames = ["assistanceNeeded", "tripType", "returnMode"];
+      Object.entries(data).forEach(([keyName, value]) => {
+        if (["created_at", "assistance"].includes(keyName)) return;
+        if (radioNames.includes(keyName)) {
+          const radio = document.querySelector(`input[name="${keyName}"][value="${CSS.escape(String(value))}"]`);
+          if (radio) radio.checked = true;
+          return;
+        }
+        const el = $(keyName);
+        if (!el) return;
+        if (el.type === "checkbox") el.checked = Boolean(value);
+        else el.value = value ?? "";
+      });
+      document.querySelectorAll("#assistanceChecks input").forEach(el => {
+        el.checked = Array.isArray(data.assistance) && data.assistance.includes(el.value);
+      });
+      currentStep = 1;
+      highestCompletedStep = 0;
+      idempotencyKey = createIdempotencyKey();
+      showNotice("会員・家族ポータルの登録情報を入力欄へ反映しました。日時を選んで内容をご確認ください。", "success");
+    } catch {
+      localStorage.removeItem(CONFIG.REPEAT_PREFILL_KEY || "dpro_caretaxi_repeat_prefill_v1");
+    }
   }
 
   function restoreDraft() {

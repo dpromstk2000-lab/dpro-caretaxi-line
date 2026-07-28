@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#075d61">
+<title>DPRO介護タクシー｜顧客・乗車者台帳</title>
+<script src="config.js"></script>
+<style>
+:root{--main:#076a6d;--deep:#064c51;--bg:#eaf2f3;--card:#fff;--line:#c7dadd;--muted:#637a7f;--warn:#9a6300;--danger:#b53a34;--shadow:0 8px 24px rgba(17,67,73,.11)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;color:#153b3f;background:var(--bg);font-size:16px}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.top{position:sticky;top:0;z-index:30;background:linear-gradient(120deg,var(--deep),var(--main));color:#fff;padding:15px 22px;box-shadow:0 2px 12px rgba(0,0,0,.14)}
+.topin{max-width:1500px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand small{font-weight:900;letter-spacing:.14em}.brand h1{font-size:27px;margin:2px 0}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{border:0;border-radius:10px;background:#fff;color:var(--deep);min-height:43px;padding:0 14px;font-weight:900}
+.shell{max-width:1500px;margin:auto;padding:14px}.notice{background:#fff5dc;border:1px solid #e4c273;border-radius:11px;padding:10px 13px;font-weight:800;color:#784a00;margin-bottom:10px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:10px}.metric{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px 12px;box-shadow:var(--shadow)}.metric span{display:block;color:var(--muted);font-size:12px;font-weight:800}.metric strong{font-size:25px;color:var(--deep)}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.search{display:flex;gap:7px;flex:1;min-width:280px}.search input{flex:1;min-height:48px;border:1px solid var(--line);border-radius:11px;padding:0 13px;background:#fff}.btn{min-height:44px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--deep);font-weight:900;padding:7px 13px}.primary{background:var(--main);border-color:var(--main);color:#fff}.warn{background:#fff7e5;border-color:#e0bc68;color:#7d4e00}.danger{background:#fff1f0;border-color:#e5aea9;color:#a7322c}.tab.active{background:var(--main);color:#fff;border-color:var(--main)}
+.layout{display:grid;grid-template-columns:minmax(350px,520px) 1fr;gap:11px;align-items:start}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:12px 14px;border-bottom:1px solid var(--line)}.panelhead h2{font-size:19px;margin:0}.list{max-height:calc(100vh - 300px);overflow:auto}.entry{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #dbe6e8;background:#fff;padding:12px}.entry:hover,.entry.selected{background:#e8f4f4}.entrytop{display:flex;justify-content:space-between;gap:8px}.name{font-size:18px;font-weight:950}.no{font-size:11px;color:var(--muted);font-weight:800}.tag{display:inline-flex;border-radius:999px;background:#e9f1f2;padding:4px 8px;font-size:11px;font-weight:900}.entrymeta{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:7px}.entrymeta div{background:#f5f8f9;border-radius:8px;padding:6px;font-size:12px}.entrymeta span{display:block;color:var(--muted);font-size:10px;font-weight:800}
+.empty{padding:42px 18px;text-align:center;color:var(--muted);font-weight:800}.detail{padding:13px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}.card{background:#f3f8f8;border-radius:10px;padding:9px}.card span{display:block;color:var(--muted);font-size:11px;font-weight:800}.card strong{font-size:18px}.section{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}.section h3{margin:0;padding:10px 12px;background:#f0f6f7;font-size:16px}.sectionbody{padding:11px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.wide{grid-column:1/-1}.field{display:grid;gap:5px}.field label{font-size:12px;font-weight:900;color:#385b60}.field input,.field select,.field textarea{min-height:44px;border:1px solid #b9cfd2;border-radius:9px;background:#fff;padding:9px 10px;width:100%}.field textarea{min-height:76px;resize:vertical}.row{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.savebar{position:sticky;bottom:0;background:rgba(255,255,255,.94);border-top:1px solid var(--line);padding:9px;margin:10px -13px -13px;display:flex;justify-content:flex-end;gap:8px}
+.linkitem,.place,.trip{border:1px solid #d5e3e5;border-radius:10px;padding:9px;margin-bottom:7px}.linkitem b,.trip b{font-size:15px}.small{font-size:12px;color:var(--muted)}.route{background:#f1f6f7;border-radius:8px;padding:7px;margin-top:5px;font-weight:800}.warning{background:#fff3d7;border:1px solid #e5c06e;border-radius:9px;padding:9px;margin-bottom:7px;color:#764900;font-weight:800}.check{display:flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:8px;background:#fff}.checks{display:flex;gap:6px;flex-wrap:wrap}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(145deg,#e8f1f2,#d4e6e8)}.loginbox{width:min(500px,100%);background:#fff;border-radius:20px;padding:26px;box-shadow:0 22px 60px rgba(6,75,80,.2)}.loginbox h1{margin:3px 0}.loginbox p{color:var(--muted)}.code{display:flex;gap:7px}.code input{flex:1;min-height:49px;border:1px solid var(--line);border-radius:10px;padding:0 12px}.code button{width:50px;border:1px solid var(--line);border-radius:10px;background:#edf4f5;font-size:22px}.loginbox .primary{width:100%;margin-top:10px}.error{background:#fff0ef;border:1px solid #e8b0ac;color:#a6322d;border-radius:9px;padding:9px;margin:8px 0}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:80;background:#153e42;color:#fff;padding:12px 18px;border-radius:11px;box-shadow:var(--shadow);display:none;font-weight:800}.toast.show{display:block}.toast.bad{background:#a63630}
+@media(max-width:950px){.layout{grid-template-columns:1fr}.list{max-height:390px}.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.top{position:static;padding:13px}.brand h1{font-size:21px}.shell{padding:9px}.metrics{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.wide{grid-column:auto}.actions button{min-height:40px;padding:0 9px}.entrymeta{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div id="loginView" class="login">
+<form id="loginForm" class="loginbox">
+<small><b>DPRO CARE TAXI</b></small><h1>顧客・乗車者台帳</h1><p>予約者、乗車者、家族関係、よく行く場所、利用履歴を管理します。</p>
+<div id="loginError" class="error hidden"></div>
+<label><b>管理コード</b></label><div class="code"><input id="adminCode" type="password" inputmode="numeric" placeholder="デモ：1234" required><button id="clearCode" type="button">×</button></div>
+<button class="btn primary" type="submit">台帳を開く</button>
+</form>
+</div>
+
+<div id="appView" class="hidden">
+<header class="top"><div class="topin"><div class="brand"><small>DPRO CARE TAXI</small><h1 id="orgName">顧客・乗車者台帳</h1></div><div class="actions"><button id="ownerBtn">管理者PC</button><button id="reloadBtn">最新情報</button><button id="logoutBtn">ログアウト</button></div></div></header>
+<main class="shell">
+<div class="notice">電話番号が重複している場合は警告しますが、既存台帳を自動統合・削除しません。</div>
+<section id="metrics" class="metrics"></section>
+<div class="toolbar">
+<div class="search"><input id="searchInput" placeholder="氏名・ふりがな・電話番号・台帳番号・住所"><button id="searchBtn" class="btn primary">検索</button></div>
+<button class="btn tab active" data-mode="customers">予約者</button><button class="btn tab" data-mode="passengers">乗車者</button>
+<button id="newCustomer" class="btn">＋ 予約者</button><button id="newPassenger" class="btn">＋ 乗車者</button>
+</div>
+<div id="warnings"></div>
+<div class="layout">
+<section class="panel"><div class="panelhead"><h2 id="listTitle">予約者台帳</h2><span id="resultCount" class="tag">0件</span></div><div id="recordList" class="list"></div></section>
+<section class="panel"><div class="panelhead"><h2 id="detailTitle">台帳を選択</h2><span id="detailTag" class="tag">未選択</span></div><div id="detailBody" class="detail"><div class="empty">左の台帳を選択してください。</div></div></section>
+</div>
+</main>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+(()=>{
+"use strict";
+const C=window.CARETAXI_CONFIG||{},API=String(C.API_BASE_URL||"").replace(/\/+$/,""),ORG=C.ORGANIZATION_CODE||"dpro_caretaxi_demo",KEY=C.ADMIN_SESSION_KEY||"dpro_caretaxi_admin_session_v1";
+const $=id=>document.getElementById(id);
+let session=null,data={customers:[],passengers:[],summary:{}},mode="customers",selected=null,detail=null;
+const customerTypes={self:"本人",family:"家族",facility:"施設",care_manager:"ケアマネ",hospital:"医療機関",other:"その他"};
+const contactTypes={line:"LINE",phone:"電話",email:"メール",none:"指定なし"};
+const mobility={walking:"歩行",cane:"杖",walker:"歩行器",wheelchair:"車いす",reclining_wheelchair:"リクライニング車いす",stretcher:"ストレッチャー",other:"その他"};
+const statusLabels={draft:"下書き",requested:"受付",reviewing:"確認中",estimate_sent:"見積送付",customer_confirmation:"利用者確認",confirmed:"予約確定",assigned:"配車済み",ready:"出発準備",departed:"出発",arrived_pickup:"お迎え到着",passenger_onboard:"乗車",arrived_destination:"目的地到着",return_waiting:"帰り待ち",completed:"完了",cancelled:"取消",rejected:"対応不可"};
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function dt(v){if(!v)return"-";return new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(v))}
+function yen(v){return v==null?"未登録":Number(v).toLocaleString("ja-JP")+"円"}
+function auth(){return session?.token?{Authorization:`Bearer ${session.token}`}:{}} 
+async function api(path,{body={},method="POST"}={}){const r=await fetch(API+path,{method,headers:{"Content-Type":"application/json",...auth()},body:method==="GET"?undefined:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok||j.ok===false)throw new Error(j.message||`通信エラー (${r.status})`);return j}
+function toast(m,b=false){const t=$("toast");t.textContent=m;t.className="toast show"+(b?" bad":"");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.className="toast",2600)}
+function showLogin(){$("loginView").classList.remove("hidden");$("appView").classList.add("hidden")}function showApp(){$("loginView").classList.add("hidden");$("appView").classList.remove("hidden")}
+function arrText(v){return Array.isArray(v)?v.join("、"):""}function arrValue(v){return String(v||"").split(/[、,\n]/).map(x=>x.trim()).filter(Boolean)}
+async function load(){try{data=await api("/v1/admin/ledger-search",{body:{query:$("searchInput").value.trim()||null,limit:200}});$("orgName").textContent=(data.organization?.name||"介護タクシー")+"｜顧客・乗車者台帳";renderMetrics();renderWarnings();renderList()}catch(e){toast(e.message,true)}}
+function renderMetrics(){const s=data.summary||{};$("metrics").innerHTML=[["予約者",s.customer_count||0],["乗車者",s.passenger_count||0],["家族・関係",s.linked_count||0],["全利用履歴",s.trip_count||0]].map(([n,v])=>`<div class="metric"><span>${n}</span><strong>${v}</strong></div>`).join("")}
+function renderWarnings(){const w=data.duplicate_warnings||[];$("warnings").innerHTML=w.slice(0,5).map(x=>`<div class="warning">${esc(x.message)} ${esc(x.value)}（${x.count}件）</div>`).join("")}
+function records(){return mode==="customers"?(data.customers||[]):(data.passengers||[])}
+function renderList(){const list=records();$("listTitle").textContent=mode==="customers"?"予約者台帳":"乗車者台帳";$("resultCount").textContent=`${list.length}件`;$("recordList").innerHTML=list.map(r=>mode==="customers"?customerEntry(r):passengerEntry(r)).join("")||'<div class="empty">該当する台帳はありません。</div>';document.querySelectorAll("[data-record]").forEach(b=>b.onclick=()=>openRecord(b.dataset.record))}
+function customerEntry(r){return`<button class="entry ${selected===r.id?"selected":""}" data-record="${r.id}"><div class="entrytop"><div><div class="name">${esc(r.full_name)}</div><div class="no">${esc(r.customer_no)} ${esc(r.full_name_kana||"")}</div></div><span class="tag">${esc(customerTypes[r.customer_type]||r.customer_type)}</span></div><div class="entrymeta"><div><span>電話</span>${esc(r.phone||"-")}</div><div><span>関連乗車者</span>${r.passenger_count}名</div><div><span>利用回数</span>${r.trip_count}件</div><div><span>最終利用</span>${esc(dt(r.last_trip_at))}</div></div></button>`}
+function passengerEntry(r){return`<button class="entry ${selected===r.id?"selected":""}" data-record="${r.id}"><div class="entrytop"><div><div class="name">${esc(r.full_name)}</div><div class="no">${esc(r.passenger_no)} ${esc(r.full_name_kana||"")}</div></div><span class="tag">${esc(mobility[r.mobility_type]||r.mobility_type)}</span></div><div class="entrymeta"><div><span>電話</span>${esc(r.phone||"-")}</div><div><span>関連予約者</span>${r.customer_count}名</div><div><span>利用回数</span>${r.trip_count}件</div><div><span>次回予定</span>${esc(dt(r.next_trip_at))}</div></div></button>`}
+async function openRecord(id){try{selected=id;renderList();detail=await api(mode==="customers"?"/v1/admin/customer-detail":"/v1/admin/passenger-detail",{body:mode==="customers"?{customer_id:id}:{passenger_id:id}});mode==="customers"?renderCustomer():renderPassenger()}catch(e){toast(e.message,true)}}
+function summaryCards(s){return`<div class="cards"><div class="card"><span>利用回数</span><strong>${s.trip_count||0}</strong></div><div class="card"><span>完了</span><strong>${s.completed_count||0}</strong></div><div class="card"><span>取消</span><strong>${s.cancelled_count||0}</strong></div><div class="card"><span>最終利用</span><strong>${esc(dt(s.last_trip_at))}</strong></div></div>`}
+function tripList(trips){return(trips||[]).map(t=>`<div class="trip"><b>${esc(dt(t.requested_pickup_at))}｜${esc(t.passenger_name||t.requester_name||"")}</b><span class="tag">${esc(statusLabels[t.status]||t.status)}</span><div class="small">${esc(t.trip_no)}｜${esc(t.booking_source||"")}</div><div class="route">${esc(t.pickup_place_name||"お迎え先")} → ${esc(t.destination_place_name||"目的地")}</div><div class="small">見積 ${yen(t.estimated_total_yen)}／確定 ${yen(t.final_total_yen)}／${esc(t.payment_status||"")}</div></div>`).join("")||'<div class="empty">利用履歴はありません。</div>'}
+function renderCustomer(){const c=detail.customer,s=detail.summary||{};$("detailTitle").textContent=`${c.customer_no}｜${c.full_name}`;$("detailTag").textContent="予約者";$("detailBody").innerHTML=`${summaryCards(s)}<section class="section"><h3>予約者情報</h3><div class="sectionbody"><div class="grid2">
+${field("cName","お名前",c.full_name,true)}${field("cKana","ふりがな",c.full_name_kana)}
+${field("cPhone","電話番号",c.phone)}${field("cEmail","メール",c.email,"email")}
+<div class="field"><label>予約者区分</label><select id="cType">${Object.entries(customerTypes).map(([v,n])=>`<option value="${v}" ${c.customer_type===v?"selected":""}>${n}</option>`).join("")}</select></div>
+${field("cAffiliation","所属施設・組織",c.affiliated_organization)}
+<div class="field"><label>希望連絡方法</label><select id="cContact">${Object.entries(contactTypes).map(([v,n])=>`<option value="${v}" ${c.preferred_contact_method===v?"selected":""}>${n}</option>`).join("")}</select></div>
+<div class="field wide"><label>内部メモ</label><textarea id="cNotes">${esc(c.internal_notes||"")}</textarea></div>
+</div></div></section>
+<section class="section"><h3>関連する乗車者</h3><div class="sectionbody">${(detail.linked_passengers||[]).map(p=>`<div class="linkitem"><b>${esc(p.full_name)}</b> <span class="tag">${esc(p.relationship)}</span><div class="small">${esc(p.passenger_no)}｜${esc(mobility[p.mobility_type]||p.mobility_type)}｜利用${p.trip_count}件</div></div>`).join("")||"関連する乗車者はまだありません。"}</div></section>
+<section class="section"><h3>利用履歴</h3><div class="sectionbody">${tripList(detail.recent_trips)}</div></section>
+<div class="savebar"><button id="saveCustomer" class="btn primary">予約者情報を保存</button></div>`;$("saveCustomer").onclick=saveCustomer}
+function field(id,label,value,type){return`<div class="field"><label>${label}</label><input id="${id}" type="${type===true?"text":type||"text"}" value="${esc(value||"")}" ${type===true?"required":""}></div>`}
+function renderPassenger(){const p=detail.passenger,s=detail.summary||{};$("detailTitle").textContent=`${p.passenger_no}｜${p.full_name}`;$("detailTag").textContent="乗車者";$("detailBody").innerHTML=`${summaryCards(s)}<section class="section"><h3>乗車者・安全情報</h3><div class="sectionbody"><div class="grid2">
+${field("pName","お名前",p.full_name,true)}${field("pKana","ふりがな",p.full_name_kana)}
+${field("pPhone","本人の電話番号",p.phone)}${field("pPostal","郵便番号",p.postal_code)}
+<div class="field wide"><label>住所</label><input id="pAddress" value="${esc(p.address||"")}"></div>
+${field("pPickup","標準のお迎え場所",p.default_pickup_place)}
+<div class="field"><label>移動方法</label><select id="pMobility">${Object.entries(mobility).map(([v,n])=>`<option value="${v}" ${p.mobility_type===v?"selected":""}>${n}</option>`).join("")}</select></div>
+${field("pWheelchair","車いすの詳細",p.wheelchair_type)}
+${field("pEmergencyName","緊急連絡先氏名",p.emergency_contact_name)}${field("pEmergencyPhone","緊急連絡先電話",p.emergency_contact_phone)}
+<div class="field wide"><label>福祉機器（カンマ区切り）</label><input id="pEquipment" value="${esc(arrText(p.equipment_needs))}"></div>
+<div class="field wide"><label>必要な介助（カンマ区切り）</label><input id="pAssistance" value="${esc(arrText(p.assistance_needs))}"></div>
+<div class="field wide"><label>お迎え時の注意</label><textarea id="pPickupNotes">${esc(p.default_pickup_notes||"")}</textarea></div>
+<div class="field wide"><label>階段・段差</label><textarea id="pStairs">${esc(p.stairs_notes||"")}</textarea></div>
+<div class="field wide"><label>建物入口・エレベーター</label><textarea id="pBuilding">${esc(p.building_access_notes||"")}</textarea></div>
+<div class="field wide"><label>安全上の注意</label><textarea id="pSafety">${esc(p.safety_notes||"")}</textarea></div>
+<div class="field wide"><label>内部メモ</label><textarea id="pNotes">${esc(p.internal_notes||"")}</textarea></div>
+<label class="check wide"><input id="pVerified" type="checkbox">今回の確認日を記録する</label>
+</div></div></section>
+<section class="section"><h3>予約者との関係</h3><div class="sectionbody">${(detail.linked_customers||[]).map(c=>`<div class="linkitem"><b>${esc(c.full_name)}</b> <span class="tag">${esc(c.relationship)}</span><div class="small">${esc(c.customer_no)}｜${esc(c.phone||"-")}｜${esc(customerTypes[c.customer_type]||c.customer_type)}</div></div>`).join("")||"関連する予約者はまだありません。"}<hr><div class="grid2"><div class="field"><label>予約者を追加</label><select id="linkCustomer"><option value="">選択</option>${(data.customers||[]).map(c=>`<option value="${c.id}">${esc(c.full_name)}（${esc(c.customer_no)}）</option>`).join("")}</select></div><div class="field"><label>関係</label><input id="linkRelationship" placeholder="家族・本人・施設職員"></div></div><div class="row"><button id="saveLink" class="btn">関連づけを保存</button></div></div></section>
+<section class="section"><h3>よく行く場所</h3><div class="sectionbody"><div id="places">${(detail.favorite_places||[]).map(placeCard).join("")||"まだ登録されていません。"}</div><hr><div class="grid2">
+<input id="placeId" type="hidden">${field("placeName","場所名","")}${field("placePhone","電話番号","")}
+<div class="field"><label>区分</label><select id="placeType"><option value="home">自宅</option><option value="hospital">病院</option><option value="clinic">診療所</option><option value="facility">施設</option><option value="pharmacy">薬局</option><option value="station">駅</option><option value="other">その他</option></select></div>
+${field("placeSort","表示順","0","number")}<div class="field wide"><label>住所</label><input id="placeAddress"></div><div class="field wide"><label>乗降時の注意</label><textarea id="placeNotes"></textarea></div></div><div class="row"><button id="savePlace" class="btn">よく行く場所を保存</button></div></div></section>
+<section class="section"><h3>利用履歴</h3><div class="sectionbody">${tripList(detail.recent_trips)}</div></section>
+<div class="savebar"><button id="savePassenger" class="btn primary">乗車者情報を保存</button></div>`;$("savePassenger").onclick=savePassenger;$("saveLink").onclick=saveLink;$("savePlace").onclick=savePlace;document.querySelectorAll("[data-place]").forEach(b=>b.onclick=()=>editPlace(b.dataset.place))}
+function placeCard(f){return`<div class="place"><div class="row"><b>${esc(f.place_name)}</b><span class="tag">${esc(f.place_type)}</span><button class="btn" data-place="${f.id}">編集</button></div><div>${esc(f.address)}</div><div class="small">${esc(f.phone||"")} ${esc(f.pickup_notes||"")}</div></div>`}
+function editPlace(id){const f=(detail.favorite_places||[]).find(x=>x.id===id);if(!f)return;$("placeId").value=f.id;$("placeName").value=f.place_name||"";$("placePhone").value=f.phone||"";$("placeType").value=f.place_type||"other";$("placeSort").value=f.sort_order||0;$("placeAddress").value=f.address||"";$("placeNotes").value=f.pickup_notes||"";$("placeName").scrollIntoView({behavior:"smooth",block:"center"})}
+function customerPayload(){return{full_name:$("cName").value,full_name_kana:$("cKana").value,phone:$("cPhone").value,email:$("cEmail").value,customer_type:$("cType").value,affiliated_organization:$("cAffiliation").value,preferred_contact_method:$("cContact").value,internal_notes:$("cNotes").value}}
+async function saveCustomer(){try{const j=await api("/v1/admin/customer-save",{body:{customer_id:selected,payload:customerPayload()}});toast("予約者情報を保存しました");await load();selected=j.customer.id;detail=j;renderCustomer();showSaveWarnings(j.warnings)}catch(e){toast(e.message,true)}}
+function passengerPayload(){return{full_name:$("pName").value,full_name_kana:$("pKana").value,phone:$("pPhone").value,postal_code:$("pPostal").value,address:$("pAddress").value,default_pickup_place:$("pPickup").value,default_pickup_notes:$("pPickupNotes").value,emergency_contact_name:$("pEmergencyName").value,emergency_contact_phone:$("pEmergencyPhone").value,mobility_type:$("pMobility").value,wheelchair_type:$("pWheelchair").value,equipment_needs:arrValue($("pEquipment").value),assistance_needs:arrValue($("pAssistance").value),stairs_notes:$("pStairs").value,building_access_notes:$("pBuilding").value,safety_notes:$("pSafety").value,internal_notes:$("pNotes").value,mark_verified:$("pVerified").checked}}
+async function savePassenger(){try{const j=await api("/v1/admin/passenger-save",{body:{passenger_id:selected,payload:passengerPayload()}});toast("乗車者情報を保存しました");await load();selected=j.passenger.id;detail=j;renderPassenger();showSaveWarnings(j.warnings)}catch(e){toast(e.message,true)}}
+function showSaveWarnings(w){if(w?.length)alert(w.map(x=>x.message+" "+x.full_name+"（"+(x.customer_no||x.passenger_no)+ "）").join("\n"))}
+async function saveLink(){try{if(!$("linkCustomer").value)throw new Error("関連づける予約者を選択してください。");detail=await api("/v1/admin/customer-passenger-link",{body:{customer_id:$("linkCustomer").value,passenger_id:selected,payload:{relationship:$("linkRelationship").value||"family",can_book:true,can_view_history:true,is_primary_contact:false}}});toast("予約者との関係を保存しました");renderPassenger()}catch(e){toast(e.message,true)}}
+async function savePlace(){try{detail=await api("/v1/admin/favorite-place-save",{body:{passenger_id:selected,place_id:$("placeId").value||null,payload:{place_name:$("placeName").value,address:$("placeAddress").value,phone:$("placePhone").value,place_type:$("placeType").value,sort_order:Number($("placeSort").value||0),pickup_notes:$("placeNotes").value}}});toast("よく行く場所を保存しました");renderPassenger()}catch(e){toast(e.message,true)}}
+function newCustomerForm(){selected=null;detail={customer:{id:null,customer_no:"新規",full_name:"",full_name_kana:"",phone:"",email:"",customer_type:"family",affiliated_organization:"",preferred_contact_method:"phone",internal_notes:""},summary:{},linked_passengers:[],recent_trips:[]};renderCustomer();$("detailTitle").textContent="新しい予約者";$("saveCustomer").onclick=async()=>{try{const j=await api("/v1/admin/customer-save",{body:{customer_id:null,payload:customerPayload()}});toast("予約者を登録しました");await load();mode="customers";selected=j.customer.id;detail=j;renderCustomer();showSaveWarnings(j.warnings)}catch(e){toast(e.message,true)}}}
+function newPassengerForm(){selected=null;detail={passenger:{id:null,passenger_no:"新規",full_name:"",full_name_kana:"",phone:"",postal_code:"",address:"",default_pickup_place:"",default_pickup_notes:"",emergency_contact_name:"",emergency_contact_phone:"",mobility_type:"walking",wheelchair_type:"",equipment_needs:[],assistance_needs:[],stairs_notes:"",building_access_notes:"",safety_notes:"",internal_notes:""},summary:{},linked_customers:[],favorite_places:[],recent_trips:[]};renderPassenger();$("detailTitle").textContent="新しい乗車者";$("savePassenger").onclick=async()=>{try{const j=await api("/v1/admin/passenger-save",{body:{passenger_id:null,payload:passengerPayload()}});toast("乗車者を登録しました");await load();mode="passengers";selected=j.passenger.id;detail=j;renderPassenger();showSaveWarnings(j.warnings)}catch(e){toast(e.message,true)}}}
+$("loginForm").onsubmit=async e=>{e.preventDefault();$("loginError").classList.add("hidden");try{const j=await api("/v1/auth/admin",{body:{code:$("adminCode").value,organization_code:ORG}});session={token:j.token,expires_at:Date.now()+Number(j.expires_in||900)*1000};sessionStorage.setItem(KEY,JSON.stringify(session));showApp();await load()}catch(err){$("loginError").textContent=err.message;$("loginError").classList.remove("hidden")}}
+$("clearCode").onclick=()=>{$("adminCode").value="";$("adminCode").focus()};$("ownerBtn").onclick=()=>location.href="./owner.html";$("reloadBtn").onclick=load;$("logoutBtn").onclick=()=>{sessionStorage.removeItem(KEY);session=null;showLogin()};$("searchBtn").onclick=load;$("searchInput").onkeydown=e=>{if(e.key==="Enter")load()};$("newCustomer").onclick=()=>{mode="customers";setTabs();newCustomerForm()};$("newPassenger").onclick=()=>{mode="passengers";setTabs();newPassengerForm()};document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;selected=null;detail=null;setTabs();renderList();$("detailTitle").textContent="台帳を選択";$("detailTag").textContent="未選択";$("detailBody").innerHTML='<div class="empty">左の台帳を選択してください。</div>'});function setTabs(){document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("active",x.dataset.mode===mode))}
+try{const s=JSON.parse(sessionStorage.getItem(KEY)||"null");if(s?.token&&Number(s.expires_at||0)>Date.now()){session=s;showApp();load()}else showLogin()}catch{showLogin()}
+})();
+</script>
+</body>
+</html>

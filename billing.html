@@ -5,19 +5,685 @@
 <title>DPRO介護タクシー｜料金・支払管理</title><script src="config.js"></script>
 <style>
 :root{--main:#08676a;--deep:#064b50;--bg:#edf4f5;--card:#fff;--line:#c9dcdf;--muted:#60777c;--danger:#b83832;--warn:#a86600;--ok:#167149;--shadow:0 10px 28px rgba(24,70,76,.10)}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#17383c;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;font-size:16px}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}.top{position:sticky;top:0;z-index:20;background:linear-gradient(120deg,var(--deep),var(--main));color:#fff;padding:14px 20px}.topin{max-width:1500px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}.brand small{font-weight:900;letter-spacing:.14em}.brand h1{margin:2px 0;font-size:25px}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{border:0;border-radius:10px;background:#fff;color:var(--deep);padding:10px 14px;font-weight:900}.shell{max-width:1500px;margin:auto;padding:14px 16px 80px}.notice{border:1px solid #ebc77f;background:#fff5dc;color:#784c00;border-radius:12px;padding:11px 14px;margin-bottom:12px;font-weight:800}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:12px}.metric{background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px 13px;box-shadow:var(--shadow)}.metric span{display:block;color:var(--muted);font-size:12px;font-weight:800}.metric strong{font-size:26px;color:var(--deep)}.layout{display:grid;grid-template-columns:minmax(410px,.9fr) minmax(620px,1.4fr);gap:12px;align-items:start}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);overflow:hidden}.panelhead{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center}.panelhead h2{font-size:19px;margin:0}.toolbar{display:flex;gap:7px;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid var(--line)}.btn{min-height:42px;border:1px solid var(--line);background:#fff;color:var(--deep);border-radius:9px;padding:8px 12px;font-weight:900}.btn.active,.primary{background:var(--main);border-color:var(--main);color:#fff}.danger{background:#fff3f2;border-color:#e9b2ae;color:var(--danger)}.warn{background:#fff8e8;border-color:#e4bd70;color:#805000}.triplist{max-height:68vh;overflow:auto}.trip{width:100%;text-align:left;border:0;border-bottom:1px solid #e4eeee;background:#fff;padding:12px 14px}.trip:hover,.trip.selected{background:#edf7f7}.triptop{display:flex;justify-content:space-between;gap:8px}.triptime{font-weight:950;color:var(--deep)}.tripno{font-size:11px;color:var(--muted)}.route{font-weight:800;margin:6px 0}.tripmeta{display:flex;gap:7px;flex-wrap:wrap;font-size:12px}.tag{border-radius:999px;background:#eef3f4;padding:4px 8px;font-weight:800}.unpaid{background:#fff0d5;color:#875300}.paid{background:#e3f5ea;color:#176b43}.partial{background:#e9efff;color:#2a5eaa}.content{padding:12px}.empty{padding:40px;text-align:center;color:var(--muted);font-weight:800}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.sum{background:#f5f9fa;border-radius:11px;padding:9px}.sum span{display:block;color:var(--muted);font-size:11px;font-weight:800}.sum strong{font-size:20px}.tabs{display:flex;gap:7px;margin-bottom:10px;overflow:auto}.tab{white-space:nowrap}.section{border:1px solid var(--line);border-radius:13px;margin-bottom:10px;overflow:hidden}.section h3{margin:0;padding:11px 13px;background:#f4f9f9;border-bottom:1px solid var(--line);font-size:17px}.sectionbody{padding:11px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field{display:grid;gap:5px}.field label{font-size:12px;color:var(--muted);font-weight:900}.field input,.field select,.field textarea{width:100%;min-height:43px;border:1px solid #b9ced1;border-radius:9px;padding:8px 10px;background:#fff}.field textarea{min-height:70px;resize:vertical}.wide{grid-column:1/-1}.editor{display:grid;gap:7px}.line{display:grid;grid-template-columns:minmax(150px,2fr) 82px 120px 110px 43px;gap:6px;align-items:center}.line input,.line select{min-width:0;height:41px;border:1px solid #b9ced1;border-radius:8px;padding:6px 8px}.line .total{text-align:right;font-weight:900}.line .remove{height:41px;border:1px solid #e2b0ad;background:#fff4f3;color:var(--danger);border-radius:8px;font-weight:900}.calc{display:grid;grid-template-columns:1fr auto;gap:5px 15px;margin-top:10px;padding-top:9px;border-top:1px dashed var(--line)}.calc b{text-align:right}.calc .grand{font-size:20px;color:var(--deep)}.row{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.payment{border:1px solid var(--line);border-radius:10px;padding:9px;margin-top:7px;display:grid;grid-template-columns:1fr auto;gap:8px}.payment small{color:var(--muted)}.login{min-height:100vh;display:grid;place-items:center;padding:20px}.loginbox{width:min(500px,100%);background:#fff;border-radius:20px;padding:26px;box-shadow:0 25px 70px rgba(5,75,80,.2)}.loginbox h1{margin:4px 0}.error{background:#fff0ef;color:#a52c27;border:1px solid #efb5b1;padding:10px;border-radius:9px;margin:9px 0}.code{display:flex;gap:7px}.code input{flex:1}.toast{position:fixed;right:16px;bottom:18px;z-index:80;background:#143e42;color:#fff;padding:11px 15px;border-radius:10px;display:none;max-width:420px}.toast.show{display:block}.toast.bad{background:#a53530}@media(max-width:1050px){.layout{grid-template-columns:1fr}.triplist{max-height:360px}.metrics{grid-template-columns:repeat(3,1fr)}}@media(max-width:650px){body{font-size:15px}.topin{align-items:flex-start}.brand h1{font-size:20px}.shell{padding:10px}.metrics{grid-template-columns:repeat(2,1fr)}.summary{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.wide{grid-column:auto}.line{grid-template-columns:1fr 62px 90px 43px}.line .total{grid-column:1/-1;background:#f4f8f9;padding:5px;border-radius:6px}.actions button{padding:8px 9px}}
+
+.integrity{margin:9px 0;border-radius:10px;padding:10px 12px;font-weight:800;line-height:1.55}
+.integrity.ok{background:#e7f6ed;border:1px solid #abd8bd;color:#176642}
+.integrity.warn{background:#fff5dd;border:1px solid #e7c477;color:#7b4d00}
+.integrity.danger{background:#fff0ef;border:1px solid #eab2ae;color:#a1302a}
+.editor-empty{border:1px dashed #b8ced1;background:#f7fafb;color:var(--muted);border-radius:10px;padding:18px;text-align:center;font-weight:800}
+.summary .notset{font-size:15px;color:var(--muted)}
+.validity{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.change-note{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}
 </style></head>
 <body>
 <div id="loginView" class="login"><form id="loginForm" class="loginbox"><small><b>DPRO CARE TAXI</b></small><h1>料金・支払管理</h1><p>見積内訳、確定料金、入金状況を管理します。</p><div id="loginError" class="error hidden"></div><div class="field"><label>管理コード</label><div class="code"><input id="adminCode" type="password" inputmode="numeric" placeholder="デモ：1234" required><button id="clearCode" class="btn" type="button">×</button></div></div><button class="btn primary" style="width:100%;margin-top:10px" type="submit">料金管理を開く</button></form></div>
 <div id="appView" class="hidden"><header class="top"><div class="topin"><div class="brand"><small>DPRO CARE TAXI</small><h1 id="orgName">料金・支払管理</h1></div><div class="actions"><button id="ownerBtn">管理者PC</button><button id="reloadBtn">最新情報</button><button id="logoutBtn">ログアウト</button></div></div></header><main class="shell"><div class="notice">営業デモ環境です。実際の請求・決済は行われません。</div><section id="metrics" class="metrics"></section><div class="layout"><section class="panel"><div class="panelhead"><h2>送迎予約</h2><span class="tag">全期間・最新200件</span></div><div class="toolbar"><button class="btn active" data-filter="all">すべて</button><button class="btn" data-filter="unpaid">未払い</button><button class="btn" data-filter="partial">一部入金</button><button class="btn" data-filter="paid">支払済み</button></div><div id="tripList" class="triplist"></div></section><section class="panel"><div class="panelhead"><h2 id="billingTitle">料金明細</h2><span id="paymentTag" class="tag">予約を選択</span></div><div id="billingContent" class="content"><div class="empty">左の予約を選択してください。</div></div></section></div></main></div><div id="toast" class="toast"></div>
 <script>
-(()=>{"use strict";const C=window.CARETAXI_CONFIG||{},API=String(C.API_BASE_URL||"").replace(/\/$/,""),ORG=C.ORGANIZATION_CODE||"dpro_caretaxi_demo",KEY=C.ADMIN_SESSION_KEY||"dpro_caretaxi_admin_session_v1",$=id=>document.getElementById(id);let session=null,dashboard=null,billing=null,filter="all",selectedTrip=null;const payLabels={unpaid:"未払い",partial:"一部入金",paid:"支払済み",refunded:"返金",waived:"免除"},methodLabels={cash:"現金",credit_card:"クレジットカード",qr:"QR決済",bank_transfer:"銀行振込",invoice:"請求書",facility_billing:"施設請求",other:"その他"};
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function yen(v){return Number(v||0).toLocaleString("ja-JP")+"円"}function dt(v){if(!v)return"-";return new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",month:"2-digit",day:"2-digit",weekday:"short",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(v))}function auth(){return session?.token?{Authorization:`Bearer ${session.token}`}:{}}async function api(path,{method="POST",body}={}){const r=await fetch(API+path,{method,headers:{"Content-Type":"application/json",...auth()},body:body?JSON.stringify(body):undefined});const j=await r.json().catch(()=>({}));if(!r.ok||j.ok===false)throw new Error(j.message||`通信エラー (${r.status})`);return j}function toast(m,b=false){const t=$("toast");t.textContent=m;t.className="toast show"+(b?" bad":"");clearTimeout(toast.x);toast.x=setTimeout(()=>t.className="toast",2500)}function showLogin(){$("loginView").classList.remove("hidden");$("appView").classList.add("hidden")}function showApp(){$("loginView").classList.add("hidden");$("appView").classList.remove("hidden")}
-async function load(){try{dashboard=await api("/v1/admin/billing-list",{body:{limit:200}});$("orgName").textContent=(dashboard.organization?.name||"介護タクシー")+"｜料金・支払管理";renderMetrics();renderTrips();if(selectedTrip)await openBilling(selectedTrip)}catch(e){toast(e.message,true)}}function renderMetrics(){const trips=dashboard?.trips||[],counts={all:trips.length,unpaid:0,partial:0,paid:0,total:0};trips.forEach(t=>{counts[t.payment_status]=(counts[t.payment_status]||0)+1;counts.total+=Number(t.final_total_yen||0)});$("metrics").innerHTML=[["対象予約",counts.all],["未払い",counts.unpaid],["一部入金",counts.partial],["支払済み",counts.paid],["確定料金合計",yen(counts.total)]].map(([n,v])=>`<div class="metric"><span>${n}</span><strong>${v}</strong></div>`).join("")}function filtered(){return(dashboard?.trips||[]).filter(t=>filter==="all"||t.payment_status===filter)}function renderTrips(){const list=filtered();$("tripList").innerHTML=list.map(t=>`<button class="trip ${selectedTrip===t.id?"selected":""}" data-trip="${t.id}"><div class="triptop"><div><div class="triptime">${esc(dt(t.requested_pickup_at))}｜${esc(t.passenger_name)}</div><div class="tripno">${esc(t.trip_no)}</div></div><span class="tag ${esc(t.payment_status)}">${esc(payLabels[t.payment_status]||t.payment_status)}</span></div><div class="route">${esc(t.pickup_place_name||"お迎え先")} → ${esc(t.destination_place_name||"目的地")}</div><div class="tripmeta"><span class="tag">見積 ${yen(t.estimated_total_yen)}</span><span class="tag">確定 ${t.final_total_yen==null?"未登録":yen(t.final_total_yen)}</span></div></button>`).join("")||'<div class="empty">該当する予約はありません。</div>';document.querySelectorAll("[data-trip]").forEach(b=>b.onclick=()=>openBilling(b.dataset.trip))}
-async function openBilling(id){try{selectedTrip=id;renderTrips();billing=await api("/v1/admin/billing-detail",{body:{trip_id:id}});renderBilling()}catch(e){toast(e.message,true)}}function latest(arr,status){return(arr||[]).find(x=>!status||x.status===status)||(arr||[])[0]||null}function defaultItems(source){if(source?.items?.length)return source.items.map(i=>({rate_item_id:i.rate_item_id||"",category:i.category||"other",item_name:i.item_name,quantity:Number(i.quantity||1),unit_amount_yen:Number(i.unit_amount_yen||0)}));return[{rate_item_id:"",category:"transport",item_name:"基本運賃",quantity:1,unit_amount_yen:3000}]}
-function lineHtml(kind,item={}){return`<div class="line" data-line="${kind}"><input class="iname" value="${esc(item.item_name||"")}" placeholder="料金項目"><input class="iqty" type="number" min="0.01" step="0.01" value="${Number(item.quantity||1)}"><input class="iunit" type="number" min="0" step="1" value="${Number(item.unit_amount_yen||0)}"><span class="total">${yen(Number(item.quantity||1)*Number(item.unit_amount_yen||0))}</span><button class="remove" type="button">×</button><input class="irate" type="hidden" value="${esc(item.rate_item_id||"")}"><input class="icat" type="hidden" value="${esc(item.category||"other")}"></div>`}function renderEditor(kind,items){return`<div class="row"><select id="${kind}Rate"><option value="">標準料金を選択</option>${(billing.rate_items||[]).map(r=>`<option value="${r.id}" data-name="${esc(r.rate_name)}" data-category="${r.category}" data-amount="${r.default_amount_yen}">${esc(r.rate_name)}（${yen(r.default_amount_yen)}）</option>`).join("")}</select><button class="btn" data-add-rate="${kind}">追加</button><button class="btn" data-add-custom="${kind}">自由項目</button></div><div id="${kind}Rows" class="editor">${items.map(i=>lineHtml(kind,i)).join("")}</div>`}
-function renderBilling(){const t=billing.trip,s=billing.summary,est=latest(billing.estimates),chg=latest((billing.charges||[]).filter(x=>x.status==="finalized"));$("billingTitle").textContent=`${t.trip_no}｜料金明細`;$("paymentTag").textContent=payLabels[t.payment_status]||t.payment_status;$("paymentTag").className=`tag ${t.payment_status}`;$("billingContent").innerHTML=`<div class="summary"><div class="sum"><span>見積</span><strong>${yen(s.estimated_total_yen)}</strong></div><div class="sum"><span>確定料金</span><strong>${yen(s.final_total_yen)}</strong></div><div class="sum"><span>入金済み</span><strong>${yen(s.paid_total_yen)}</strong></div><div class="sum"><span>残額</span><strong>${yen(s.balance_due_yen)}</strong></div></div><div class="tabs"><button class="btn tab active" data-tab="estimate">見積</button><button class="btn tab" data-tab="charge">確定料金</button><button class="btn tab" data-tab="payment">入金</button></div><div id="tab-estimate" class="tabbody"><section class="section"><h3>見積内訳</h3><div class="sectionbody">${renderEditor("estimate",defaultItems(est))}<div class="grid2"><div class="field"><label>割引</label><input id="estimateDiscount" type="number" min="0" value="${est?.discount_yen||0}"></div><div class="field"><label>税額</label><input id="estimateTax" type="number" min="0" value="${est?.tax_yen||0}"></div><div class="field"><label>有効期限</label><input id="estimateValid" type="date" value="${esc(est?.valid_until||"")}"></div><div class="field"><label>保存方法</label><select id="estimateSend"><option value="true">保存して送付済み</option><option value="false">下書き保存</option></select></div><div class="field wide"><label>お客様へのメッセージ</label><textarea id="estimateMessage">${esc(est?.customer_message||"")}</textarea></div><div class="field wide"><label>内部メモ</label><textarea id="estimateNotes">${esc(est?.internal_notes||"")}</textarea></div></div><div id="estimateCalc" class="calc"></div><div class="row"><button id="saveEstimate" class="btn primary">見積を保存</button></div></div></section></div><div id="tab-charge" class="tabbody hidden"><section class="section"><h3>確定料金内訳</h3><div class="sectionbody"><div class="row"><button id="copyEstimate" class="btn">最新見積からコピー</button></div>${renderEditor("charge",defaultItems(chg||est))}<div class="grid2"><div class="field"><label>割引</label><input id="chargeDiscount" type="number" min="0" value="${chg?.discount_yen||0}"></div><div class="field"><label>税額</label><input id="chargeTax" type="number" min="0" value="${chg?.tax_yen||0}"></div><div class="field wide"><label>お客様へのメッセージ</label><textarea id="chargeMessage">${esc(chg?.customer_message||"")}</textarea></div><div class="field wide"><label>内部メモ</label><textarea id="chargeNotes">${esc(chg?.internal_notes||"")}</textarea></div></div><div id="chargeCalc" class="calc"></div><button id="saveCharge" class="btn primary">確定料金を保存</button></div></section></div><div id="tab-payment" class="tabbody hidden"><section class="section"><h3>入金を登録</h3><div class="sectionbody"><div class="grid2"><div class="field"><label>支払方法</label><select id="paymentMethod">${Object.entries(methodLabels).map(([v,n])=>`<option value="${v}">${n}</option>`).join("")}</select></div><div class="field"><label>入金額</label><input id="paymentAmount" type="number" min="1" value="${s.balance_due_yen||""}"></div><div class="field"><label>状態</label><select id="paymentState"><option value="paid">入金済み</option><option value="pending">入金予定</option></select></div><div class="field"><label>支払者名</label><input id="payerName"></div><div class="field wide"><label>メモ</label><input id="paymentNotes"></div></div><div class="row"><button id="recordPayment" class="btn primary">入金を登録</button><button id="waivePayment" class="btn warn">残額を免除</button></div></div></section><section class="section"><h3>入金履歴</h3><div class="sectionbody">${(billing.payments||[]).map(p=>`<div class="payment"><div><b>${yen(p.amount_yen)}｜${esc(methodLabels[p.payment_method]||p.payment_method)}｜${esc(p.status)}</b><br><small>${esc(p.payment_no)} ${esc(dt(p.paid_at||p.created_at))}</small></div><div>${p.status==="pending"?`<button class="btn danger" data-pay-action="cancel" data-payment="${p.id}">取消</button>`:""}${p.status==="paid"?`<button class="btn warn" data-pay-action="refund" data-payment="${p.id}">返金</button>`:""}</div></div>`).join("")||"入金記録はありません。"}</div></section></div>`;bindBilling();calc("estimate");calc("charge")}
-function bindBilling(){document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".tabbody").forEach(x=>x.classList.add("hidden"));$("tab-"+b.dataset.tab).classList.remove("hidden")});document.querySelectorAll("[data-add-rate]").forEach(b=>b.onclick=()=>addRate(b.dataset.addRate));document.querySelectorAll("[data-add-custom]").forEach(b=>b.onclick=()=>addLine(b.dataset.addCustom,{}));document.querySelectorAll(".editor").forEach(e=>e.addEventListener("input",()=>calc(e.id.replace("Rows",""))));document.querySelectorAll(".remove").forEach(b=>b.onclick=()=>{const k=b.closest(".editor").id.replace("Rows","");b.closest(".line").remove();calc(k)});$("estimateDiscount").oninput=$("estimateTax").oninput=()=>calc("estimate");$("chargeDiscount").oninput=$("chargeTax").oninput=()=>calc("charge");$("saveEstimate").onclick=saveEstimate;$("saveCharge").onclick=saveCharge;$("copyEstimate").onclick=()=>{const e=latest(billing.estimates);$("chargeRows").innerHTML=(e?.items||[]).map(i=>lineHtml("charge",i)).join("");bindBilling();calc("charge")};$("recordPayment").onclick=recordPayment;$("waivePayment").onclick=waive;document.querySelectorAll("[data-pay-action]").forEach(b=>b.onclick=()=>paymentAction(b.dataset.payAction,{payment_id:b.dataset.payment,notes:"管理画面から処理"}))}
-function addRate(kind){const s=$(kind+"Rate"),o=s.selectedOptions[0];if(!s.value)return;addLine(kind,{rate_item_id:s.value,item_name:o.dataset.name,category:o.dataset.category,quantity:1,unit_amount_yen:Number(o.dataset.amount)});s.value=""}function addLine(kind,item){$(kind+"Rows").insertAdjacentHTML("beforeend",lineHtml(kind,item));bindBilling();calc(kind)}function collect(kind){return[...document.querySelectorAll(`#${kind}Rows .line`)].map(r=>({rate_item_id:r.querySelector(".irate").value||null,category:r.querySelector(".icat").value||"other",item_name:r.querySelector(".iname").value.trim(),quantity:Number(r.querySelector(".iqty").value),unit_amount_yen:Number(r.querySelector(".iunit").value)})).filter(i=>i.item_name)}function calc(kind){const rows=[...document.querySelectorAll(`#${kind}Rows .line`)];let sub=0;rows.forEach(r=>{const total=Number(r.querySelector(".iqty").value||0)*Number(r.querySelector(".iunit").value||0);r.querySelector(".total").textContent=yen(total);sub+=total});const d=Number($(kind+"Discount")?.value||0),tax=Number($(kind+"Tax")?.value||0),total=Math.max(0,sub-d+tax);$(kind+"Calc").innerHTML=`<span>小計</span><b>${yen(sub)}</b><span>割引</span><b>-${yen(d)}</b><span>税額</span><b>${yen(tax)}</b><span class="grand">合計</span><b class="grand">${yen(total)}</b>`}
-async function saveEstimate(){try{await api("/v1/admin/estimate-save",{body:{trip_id:selectedTrip,items:collect("estimate"),discount_yen:Number($("estimateDiscount").value||0),tax_yen:Number($("estimateTax").value||0),valid_until:$("estimateValid").value||null,customer_message:$("estimateMessage").value,internal_notes:$("estimateNotes").value,send:$("estimateSend").value==="true"}});toast("見積を保存しました");await load()}catch(e){toast(e.message,true)}}async function saveCharge(){try{await api("/v1/admin/final-charge-save",{body:{trip_id:selectedTrip,items:collect("charge"),discount_yen:Number($("chargeDiscount").value||0),tax_yen:Number($("chargeTax").value||0),customer_message:$("chargeMessage").value,internal_notes:$("chargeNotes").value}});toast("確定料金を保存しました");await load()}catch(e){toast(e.message,true)}}async function recordPayment(){await paymentAction("record",{payment_method:$("paymentMethod").value,amount_yen:Number($("paymentAmount").value),status:$("paymentState").value,payer_name:$("payerName").value,notes:$("paymentNotes").value})}async function waive(){const notes=prompt("免除理由を入力してください");if(notes)await paymentAction("waive",{notes})}async function paymentAction(action,payload){try{await api("/v1/admin/payment-action",{body:{trip_id:selectedTrip,action,payload}});toast("支払情報を更新しました");await load()}catch(e){toast(e.message,true)}}
-$("loginForm").onsubmit=async e=>{e.preventDefault();$("loginError").classList.add("hidden");try{const j=await api("/v1/auth/admin",{body:{code:$("adminCode").value,organization_code:ORG}});session={token:j.token,expires_at:Date.now()+Number(j.expires_in||900)*1000};sessionStorage.setItem(KEY,JSON.stringify(session));showApp();await load()}catch(x){$("loginError").textContent=x.message;$("loginError").classList.remove("hidden")}};$("clearCode").onclick=()=>$("adminCode").value="";$("ownerBtn").onclick=()=>location.href="./owner.html";$("reloadBtn").onclick=load;$("logoutBtn").onclick=()=>{sessionStorage.removeItem(KEY);session=null;showLogin()};document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-filter]").forEach(x=>x.classList.toggle("active",x===b));filter=b.dataset.filter;renderTrips()});try{const x=JSON.parse(sessionStorage.getItem(KEY)||"null");if(x?.token&&Number(x.expires_at||0)>Date.now()){session=x;showApp();load()}else showLogin()}catch{showLogin()}})();
+(()=>{
+"use strict";
+
+const C=window.CARETAXI_CONFIG||{};
+const API=String(C.API_BASE_URL||"").replace(/\/$/,"");
+const ORG=C.ORGANIZATION_CODE||"dpro_caretaxi_demo";
+const KEY=C.ADMIN_SESSION_KEY||"dpro_caretaxi_admin_session_v1";
+const $=id=>document.getElementById(id);
+
+let session=null;
+let dashboard=null;
+let billing=null;
+let filter="all";
+let selectedTrip=null;
+
+const payLabels={
+  unpaid:"未払い",partial:"一部入金",paid:"支払済み",refunded:"返金",waived:"免除"
+};
+const methodLabels={
+  cash:"現金",credit_card:"クレジットカード",qr:"QR決済",
+  bank_transfer:"銀行振込",invoice:"請求書",
+  facility_billing:"施設請求",other:"その他"
+};
+
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+function yen(v){
+  return Number(v||0).toLocaleString("ja-JP")+"円";
+}
+function moneyOrNotSet(v){
+  return v==null?'<span class="notset">未登録</span>':yen(v);
+}
+function dt(v){
+  if(!v)return"-";
+  return new Intl.DateTimeFormat("ja-JP",{
+    timeZone:"Asia/Tokyo",month:"2-digit",day:"2-digit",weekday:"short",
+    hour:"2-digit",minute:"2-digit",hour12:false
+  }).format(new Date(v));
+}
+function auth(){
+  return session?.token?{Authorization:`Bearer ${session.token}`}:{};
+}
+async function api(path,{method="POST",body}={}){
+  const r=await fetch(API+path,{
+    method,
+    headers:{"Content-Type":"application/json",...auth()},
+    body:body?JSON.stringify(body):undefined
+  });
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok||j.ok===false)throw new Error(j.message||`通信エラー (${r.status})`);
+  return j;
+}
+function toast(message,bad=false){
+  const t=$("toast");
+  t.textContent=message;
+  t.className="toast show"+(bad?" bad":"");
+  clearTimeout(toast.timer);
+  toast.timer=setTimeout(()=>t.className="toast",2800);
+}
+function showLogin(){
+  $("loginView").classList.remove("hidden");
+  $("appView").classList.add("hidden");
+}
+function showApp(){
+  $("loginView").classList.add("hidden");
+  $("appView").classList.remove("hidden");
+}
+
+async function load(){
+  try{
+    dashboard=await api("/v1/admin/billing-list",{body:{limit:200}});
+    $("orgName").textContent=(dashboard.organization?.name||"介護タクシー")+"｜料金・支払管理";
+    renderMetrics();
+    renderTrips();
+    if(selectedTrip)await openBilling(selectedTrip);
+  }catch(e){
+    toast(e.message,true);
+  }
+}
+function renderMetrics(){
+  const trips=dashboard?.trips||[];
+  const counts={all:trips.length,unpaid:0,partial:0,paid:0,total:0};
+  trips.forEach(t=>{
+    counts[t.payment_status]=(counts[t.payment_status]||0)+1;
+    counts.total+=Number(t.final_total_yen||0);
+  });
+  $("metrics").innerHTML=[
+    ["対象予約",counts.all],
+    ["未払い",counts.unpaid],
+    ["一部入金",counts.partial],
+    ["支払済み",counts.paid],
+    ["確定料金合計",yen(counts.total)]
+  ].map(([name,value])=>`<div class="metric"><span>${name}</span><strong>${value}</strong></div>`).join("");
+}
+function filtered(){
+  return(dashboard?.trips||[]).filter(t=>filter==="all"||t.payment_status===filter);
+}
+function renderTrips(){
+  const list=filtered();
+  $("tripList").innerHTML=list.map(t=>`
+    <button class="trip ${selectedTrip===t.id?"selected":""}" data-trip="${t.id}">
+      <div class="triptop">
+        <div>
+          <div class="triptime">${esc(dt(t.requested_pickup_at))}｜${esc(t.passenger_name)}</div>
+          <div class="tripno">${esc(t.trip_no)}</div>
+        </div>
+        <span class="tag ${esc(t.payment_status)}">${esc(payLabels[t.payment_status]||t.payment_status)}</span>
+      </div>
+      <div class="route">${esc(t.pickup_place_name||"お迎え先")} → ${esc(t.destination_place_name||"目的地")}</div>
+      <div class="tripmeta">
+        <span class="tag">見積 ${t.estimated_total_yen==null?"未登録":yen(t.estimated_total_yen)}</span>
+        <span class="tag">確定 ${t.final_total_yen==null?"未登録":yen(t.final_total_yen)}</span>
+      </div>
+    </button>
+  `).join("")||'<div class="empty">該当する予約はありません。</div>';
+
+  document.querySelectorAll("[data-trip]").forEach(button=>{
+    button.onclick=()=>openBilling(button.dataset.trip);
+  });
+}
+async function openBilling(id){
+  try{
+    selectedTrip=id;
+    renderTrips();
+    billing=await api("/v1/admin/billing-detail",{body:{trip_id:id}});
+    renderBilling();
+  }catch(e){
+    toast(e.message,true);
+  }
+}
+function latest(arr,status){
+  return(arr||[]).find(x=>!status||x.status===status)||(arr||[])[0]||null;
+}
+function sourceItems(source){
+  if(!source?.items?.length)return[];
+  return source.items.map(item=>({
+    rate_item_id:item.rate_item_id||"",
+    category:item.category||"other",
+    item_name:item.item_name,
+    quantity:Number(item.quantity||1),
+    unit_amount_yen:Number(item.unit_amount_yen||0)
+  }));
+}
+function lineHtml(kind,item={}){
+  return`
+    <div class="line" data-line="${kind}">
+      <input class="iname" value="${esc(item.item_name||"")}" placeholder="料金項目">
+      <input class="iqty" type="number" min="0.01" step="0.01" value="${Number(item.quantity||1)}">
+      <input class="iunit" type="number" min="0" step="1" value="${Number(item.unit_amount_yen||0)}">
+      <span class="total">${yen(Math.round(Number(item.quantity||1)*Number(item.unit_amount_yen||0)))}</span>
+      <button class="remove" type="button" aria-label="項目を削除">×</button>
+      <input class="irate" type="hidden" value="${esc(item.rate_item_id||"")}">
+      <input class="icat" type="hidden" value="${esc(item.category||"other")}">
+    </div>`;
+}
+function emptyEditorHtml(kind){
+  const target=kind==="estimate"?"見積":"確定料金";
+  return`<div class="editor-empty" data-empty="${kind}">
+    ${target}の内訳はまだ登録されていません。<br>
+    上の「標準料金を選択」または「自由項目」から追加してください。
+  </div>`;
+}
+function renderEditor(kind,items){
+  return`
+    <div class="row">
+      <select id="${kind}Rate">
+        <option value="">標準料金を選択</option>
+        ${(billing.rate_items||[]).map(r=>`
+          <option value="${r.id}" data-name="${esc(r.rate_name)}"
+            data-category="${esc(r.category)}" data-amount="${Number(r.default_amount_yen||0)}">
+            ${esc(r.rate_name)}（${yen(r.default_amount_yen)}）
+          </option>`).join("")}
+      </select>
+      <button class="btn" data-add-rate="${kind}" type="button">追加</button>
+      <button class="btn" data-add-custom="${kind}" type="button">自由項目</button>
+    </div>
+    <div id="${kind}Rows" class="editor">${items.map(i=>lineHtml(kind,i)).join("")}</div>
+    <div id="${kind}Empty">${items.length?"":emptyEditorHtml(kind)}</div>`;
+}
+function activeEstimate(){
+  return latest((billing.estimates||[]).filter(x=>x.status!=="cancelled"));
+}
+function activeCharge(){
+  return latest((billing.charges||[]).filter(x=>x.status==="finalized"));
+}
+function legacyEstimateExists(){
+  return !activeEstimate() && Number(billing?.trip?.estimated_total_yen||0)>0;
+}
+function legacyEstimateNotice(){
+  if(!legacyEstimateExists())return"";
+  return`<div class="integrity warn">
+    <b>内訳未登録</b><br>
+    現在の保存済み見積額は <b>${yen(billing.trip.estimated_total_yen)}</b> ですが、
+    料金項目の内訳はまだ登録されていません。内訳を入力するまで、この金額は変更されません。
+  </div>`;
+}
+function summaryBalanceHtml(){
+  return billing.trip.final_total_yen==null
+    ?'<span class="notset">確定料金未登録</span>'
+    :yen(billing.summary.balance_due_yen);
+}
+function renderBilling(){
+  const t=billing.trip;
+  const s=billing.summary;
+  const est=activeEstimate();
+  const chg=activeCharge();
+  const estimateItems=sourceItems(est);
+  const chargeItems=sourceItems(chg);
+
+  $("billingTitle").textContent=`${t.trip_no}｜料金明細`;
+  $("paymentTag").textContent=payLabels[t.payment_status]||t.payment_status;
+  $("paymentTag").className=`tag ${t.payment_status}`;
+
+  $("billingContent").innerHTML=`
+    <div class="summary">
+      <div class="sum"><span>見積</span><strong>${moneyOrNotSet(t.estimated_total_yen)}</strong></div>
+      <div class="sum"><span>確定料金</span><strong>${moneyOrNotSet(t.final_total_yen)}</strong></div>
+      <div class="sum"><span>入金済み</span><strong>${yen(s.paid_total_yen)}</strong></div>
+      <div class="sum"><span>残額</span><strong>${summaryBalanceHtml()}</strong></div>
+    </div>
+
+    <div class="tabs">
+      <button class="btn tab active" data-tab="estimate" type="button">見積</button>
+      <button class="btn tab" data-tab="charge" type="button">確定料金</button>
+      <button class="btn tab" data-tab="payment" type="button">入金</button>
+    </div>
+
+    <div id="tab-estimate" class="tabbody">
+      <section class="section">
+        <h3>見積内訳</h3>
+        <div class="sectionbody">
+          ${legacyEstimateNotice()}
+          ${renderEditor("estimate",estimateItems)}
+          <div class="grid2">
+            <div class="field">
+              <label>割引</label>
+              <input id="estimateDiscount" type="number" min="0" value="${Number(est?.discount_yen||0)}">
+            </div>
+            <div class="field">
+              <label>税額</label>
+              <input id="estimateTax" type="number" min="0" value="${Number(est?.tax_yen||0)}">
+            </div>
+            <div class="field wide">
+              <label>有効期限（任意）</label>
+              <div class="validity">
+                <select id="estimateValidMode">
+                  <option value="none" ${est?.valid_until?"":"selected"}>設定しない</option>
+                  <option value="date" ${est?.valid_until?"selected":""}>日付を設定</option>
+                </select>
+                <input id="estimateValid" class="${est?.valid_until?"":"hidden"}"
+                  type="date" value="${esc(est?.valid_until||"")}">
+              </div>
+            </div>
+            <div class="field">
+              <label>保存方法</label>
+              <select id="estimateSend">
+                <option value="true" ${est?.status==="draft"?"":"selected"}>保存して送付済み</option>
+                <option value="false" ${est?.status==="draft"?"selected":""}>下書き保存</option>
+              </select>
+            </div>
+            <div class="field wide">
+              <label>お客様へのメッセージ</label>
+              <textarea id="estimateMessage">${esc(est?.customer_message||"")}</textarea>
+            </div>
+            <div class="field wide">
+              <label>内部メモ</label>
+              <textarea id="estimateNotes">${esc(est?.internal_notes||"")}</textarea>
+            </div>
+          </div>
+          <div id="estimateCalc" class="calc"></div>
+          <div id="estimateIntegrity"></div>
+          <div class="row">
+            <button id="saveEstimate" class="btn primary" type="button">見積を保存</button>
+          </div>
+          <div class="change-note">既存の見積額と編集後の合計が異なる場合は、保存前に確認画面を表示します。</div>
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-charge" class="tabbody hidden">
+      <section class="section">
+        <h3>確定料金内訳</h3>
+        <div class="sectionbody">
+          <div class="row">
+            <button id="copyEstimate" class="btn" type="button">最新見積からコピー</button>
+          </div>
+          ${renderEditor("charge",chargeItems)}
+          <div class="grid2">
+            <div class="field">
+              <label>割引</label>
+              <input id="chargeDiscount" type="number" min="0" value="${Number(chg?.discount_yen||0)}">
+            </div>
+            <div class="field">
+              <label>税額</label>
+              <input id="chargeTax" type="number" min="0" value="${Number(chg?.tax_yen||0)}">
+            </div>
+            <div class="field wide">
+              <label>お客様へのメッセージ</label>
+              <textarea id="chargeMessage">${esc(chg?.customer_message||"")}</textarea>
+            </div>
+            <div class="field wide">
+              <label>内部メモ</label>
+              <textarea id="chargeNotes">${esc(chg?.internal_notes||"")}</textarea>
+            </div>
+          </div>
+          <div id="chargeCalc" class="calc"></div>
+          <div id="chargeIntegrity"></div>
+          <button id="saveCharge" class="btn primary" type="button">確定料金を保存</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-payment" class="tabbody hidden">
+      <section class="section">
+        <h3>入金を登録</h3>
+        <div class="sectionbody">
+          ${t.final_total_yen==null?'<div class="integrity warn">確定料金が未登録です。入金を登録する前に、確定料金を保存してください。</div>':""}
+          <div class="grid2">
+            <div class="field">
+              <label>支払方法</label>
+              <select id="paymentMethod">
+                ${Object.entries(methodLabels).map(([v,n])=>`<option value="${v}">${n}</option>`).join("")}
+              </select>
+            </div>
+            <div class="field">
+              <label>入金額</label>
+              <input id="paymentAmount" type="number" min="1"
+                value="${t.final_total_yen==null?"":Number(s.balance_due_yen||0)}"
+                ${t.final_total_yen==null?"disabled":""}>
+            </div>
+            <div class="field">
+              <label>状態</label>
+              <select id="paymentState" ${t.final_total_yen==null?"disabled":""}>
+                <option value="paid">入金済み</option>
+                <option value="pending">入金予定</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>支払者名</label>
+              <input id="payerName" ${t.final_total_yen==null?"disabled":""}>
+            </div>
+            <div class="field wide">
+              <label>メモ</label>
+              <input id="paymentNotes" ${t.final_total_yen==null?"disabled":""}>
+            </div>
+          </div>
+          <div class="row">
+            <button id="recordPayment" class="btn primary" type="button"
+              ${t.final_total_yen==null?"disabled":""}>入金を登録</button>
+            <button id="waivePayment" class="btn warn" type="button"
+              ${t.final_total_yen==null?"disabled":""}>残額を免除</button>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <h3>入金履歴</h3>
+        <div class="sectionbody">
+          ${(billing.payments||[]).map(p=>`
+            <div class="payment">
+              <div>
+                <b>${yen(p.amount_yen)}｜${esc(methodLabels[p.payment_method]||p.payment_method)}｜${esc(p.status)}</b><br>
+                <small>${esc(p.payment_no)} ${esc(dt(p.paid_at||p.created_at))}</small>
+              </div>
+              <div>
+                ${p.status==="pending"?`<button class="btn danger" data-pay-action="cancel" data-payment="${p.id}" type="button">取消</button>`:""}
+                ${p.status==="paid"?`<button class="btn warn" data-pay-action="refund" data-payment="${p.id}" type="button">返金</button>`:""}
+              </div>
+            </div>`).join("")||"入金記録はありません。"}
+        </div>
+      </section>
+    </div>`;
+
+  bindBilling();
+  calc("estimate");
+  calc("charge");
+}
+function syncEmpty(kind){
+  const rows=$(`${kind}Rows`);
+  const holder=$(`${kind}Empty`);
+  if(!rows||!holder)return;
+  holder.innerHTML=rows.querySelector(".line")?"":emptyEditorHtml(kind);
+}
+function bindLineEvents(kind){
+  const rows=$(`${kind}Rows`);
+  if(!rows)return;
+  rows.oninput=()=>calc(kind);
+  rows.querySelectorAll(".remove").forEach(button=>{
+    button.onclick=()=>{
+      button.closest(".line")?.remove();
+      syncEmpty(kind);
+      calc(kind);
+    };
+  });
+}
+function bindBilling(){
+  document.querySelectorAll("[data-tab]").forEach(button=>{
+    button.onclick=()=>{
+      document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===button));
+      document.querySelectorAll(".tabbody").forEach(x=>x.classList.add("hidden"));
+      $(`tab-${button.dataset.tab}`).classList.remove("hidden");
+    };
+  });
+  document.querySelectorAll("[data-add-rate]").forEach(button=>{
+    button.onclick=()=>addRate(button.dataset.addRate);
+  });
+  document.querySelectorAll("[data-add-custom]").forEach(button=>{
+    button.onclick=()=>addLine(button.dataset.addCustom,{});
+  });
+
+  bindLineEvents("estimate");
+  bindLineEvents("charge");
+
+  $("estimateDiscount").oninput=$("estimateTax").oninput=()=>calc("estimate");
+  $("chargeDiscount").oninput=$("chargeTax").oninput=()=>calc("charge");
+
+  $("estimateValidMode").onchange=()=>{
+    const useDate=$("estimateValidMode").value==="date";
+    $("estimateValid").classList.toggle("hidden",!useDate);
+    if(!useDate)$("estimateValid").value="";
+  };
+
+  $("saveEstimate").onclick=saveEstimate;
+  $("saveCharge").onclick=saveCharge;
+  $("copyEstimate").onclick=copyEstimateToCharge;
+
+  $("recordPayment").onclick=recordPayment;
+  $("waivePayment").onclick=waive;
+
+  document.querySelectorAll("[data-pay-action]").forEach(button=>{
+    button.onclick=()=>paymentAction(button.dataset.payAction,{
+      payment_id:button.dataset.payment,
+      notes:"管理画面から処理"
+    });
+  });
+}
+function addRate(kind){
+  const select=$(`${kind}Rate`);
+  const option=select.selectedOptions[0];
+  if(!select.value)return;
+  addLine(kind,{
+    rate_item_id:select.value,
+    item_name:option.dataset.name,
+    category:option.dataset.category,
+    quantity:1,
+    unit_amount_yen:Number(option.dataset.amount)
+  });
+  select.value="";
+}
+function addLine(kind,item){
+  $(`${kind}Rows`).insertAdjacentHTML("beforeend",lineHtml(kind,item));
+  syncEmpty(kind);
+  bindLineEvents(kind);
+  calc(kind);
+}
+function collect(kind){
+  return[...document.querySelectorAll(`#${kind}Rows .line`)].map(row=>({
+    rate_item_id:row.querySelector(".irate").value||null,
+    category:row.querySelector(".icat").value||"other",
+    item_name:row.querySelector(".iname").value.trim(),
+    quantity:Number(row.querySelector(".iqty").value),
+    unit_amount_yen:Number(row.querySelector(".iunit").value)
+  })).filter(item=>item.item_name);
+}
+function calculate(kind){
+  const rows=[...document.querySelectorAll(`#${kind}Rows .line`)];
+  let subtotal=0;
+  rows.forEach(row=>{
+    const quantity=Number(row.querySelector(".iqty").value||0);
+    const unit=Number(row.querySelector(".iunit").value||0);
+    const lineTotal=Math.round(quantity*unit);
+    row.querySelector(".total").textContent=yen(lineTotal);
+    subtotal+=lineTotal;
+  });
+  const discount=Number($(`${kind}Discount`)?.value||0);
+  const tax=Number($(`${kind}Tax`)?.value||0);
+  const total=Math.max(0,subtotal-discount+tax);
+  return{subtotal,discount,tax,total,count:rows.length};
+}
+function integrityMessage(kind,result){
+  const holder=$(`${kind}Integrity`);
+  if(!holder)return;
+
+  const current=kind==="estimate"
+    ? billing.trip.estimated_total_yen
+    : billing.trip.final_total_yen;
+
+  if(result.count===0){
+    holder.innerHTML=`<div class="integrity warn">内訳が未登録です。保存するには料金項目を1件以上追加してください。</div>`;
+    return;
+  }
+  if(current==null){
+    holder.innerHTML=`<div class="integrity ok">編集後の${kind==="estimate"?"見積":"確定料金"}：<b>${yen(result.total)}</b></div>`;
+    return;
+  }
+  if(Number(current)===result.total){
+    holder.innerHTML=`<div class="integrity ok">保存済み金額と内訳合計が一致しています：<b>${yen(result.total)}</b></div>`;
+    return;
+  }
+  holder.innerHTML=`<div class="integrity danger">
+    現在の保存済み金額 <b>${yen(current)}</b> から、編集後は <b>${yen(result.total)}</b> へ変更されます。
+  </div>`;
+}
+function calc(kind){
+  const result=calculate(kind);
+  $(`${kind}Calc`).innerHTML=`
+    <span>小計</span><b>${yen(result.subtotal)}</b>
+    <span>割引</span><b>-${yen(result.discount)}</b>
+    <span>税額</span><b>${yen(result.tax)}</b>
+    <span class="grand">合計</span><b class="grand">${yen(result.total)}</b>`;
+  integrityMessage(kind,result);
+  return result;
+}
+function confirmAmountChange(kind,result){
+  const current=kind==="estimate"
+    ? billing.trip.estimated_total_yen
+    : billing.trip.final_total_yen;
+  if(current==null||Number(current)===result.total)return true;
+  const label=kind==="estimate"?"見積額":"確定料金";
+  return window.confirm(
+    `現在の${label} ${yen(current)} から ${yen(result.total)} へ変更します。
+`+
+    "保存後は新しい金額が表示されます。よろしいですか？"
+  );
+}
+async function saveEstimate(){
+  try{
+    const items=collect("estimate");
+    const result=calc("estimate");
+    if(!items.length)throw new Error("見積項目を1件以上追加してください。");
+    if(!confirmAmountChange("estimate",result))return;
+
+    await api("/v1/admin/estimate-save",{body:{
+      trip_id:selectedTrip,
+      items,
+      discount_yen:Number($("estimateDiscount").value||0),
+      tax_yen:Number($("estimateTax").value||0),
+      valid_until:$("estimateValidMode").value==="date"?($("estimateValid").value||null):null,
+      customer_message:$("estimateMessage").value,
+      internal_notes:$("estimateNotes").value,
+      send:$("estimateSend").value==="true"
+    }});
+    toast("見積を保存しました");
+    await load();
+  }catch(e){
+    toast(e.message,true);
+  }
+}
+function copyEstimateToCharge(){
+  const est=activeEstimate();
+  if(!est?.items?.length){
+    toast("見積の内訳が未登録のため、確定料金へコピーできません。",true);
+    return;
+  }
+  $("chargeRows").innerHTML=sourceItems(est).map(item=>lineHtml("charge",item)).join("");
+  $("chargeDiscount").value=Number(est.discount_yen||0);
+  $("chargeTax").value=Number(est.tax_yen||0);
+  syncEmpty("charge");
+  bindLineEvents("charge");
+  calc("charge");
+}
+async function saveCharge(){
+  try{
+    const items=collect("charge");
+    const result=calc("charge");
+    if(!items.length)throw new Error("確定料金の項目を1件以上追加してください。");
+    if(!confirmAmountChange("charge",result))return;
+
+    await api("/v1/admin/final-charge-save",{body:{
+      trip_id:selectedTrip,
+      items,
+      discount_yen:Number($("chargeDiscount").value||0),
+      tax_yen:Number($("chargeTax").value||0),
+      customer_message:$("chargeMessage").value,
+      internal_notes:$("chargeNotes").value
+    }});
+    toast("確定料金を保存しました");
+    await load();
+  }catch(e){
+    toast(e.message,true);
+  }
+}
+async function recordPayment(){
+  if(billing.trip.final_total_yen==null){
+    toast("確定料金を先に登録してください。",true);
+    return;
+  }
+  await paymentAction("record",{
+    payment_method:$("paymentMethod").value,
+    amount_yen:Number($("paymentAmount").value),
+    status:$("paymentState").value,
+    payer_name:$("payerName").value,
+    notes:$("paymentNotes").value
+  });
+}
+async function waive(){
+  if(billing.trip.final_total_yen==null){
+    toast("確定料金を先に登録してください。",true);
+    return;
+  }
+  const notes=prompt("免除理由を入力してください");
+  if(notes)await paymentAction("waive",{notes});
+}
+async function paymentAction(action,payload){
+  try{
+    await api("/v1/admin/payment-action",{body:{trip_id:selectedTrip,action,payload}});
+    toast("支払情報を更新しました");
+    await load();
+  }catch(e){
+    toast(e.message,true);
+  }
+}
+
+$("loginForm").onsubmit=async event=>{
+  event.preventDefault();
+  $("loginError").classList.add("hidden");
+  try{
+    const response=await api("/v1/auth/admin",{body:{
+      code:$("adminCode").value,
+      organization_code:ORG
+    }});
+    session={
+      token:response.token,
+      expires_at:Date.now()+Number(response.expires_in||900)*1000
+    };
+    sessionStorage.setItem(KEY,JSON.stringify(session));
+    showApp();
+    await load();
+  }catch(error){
+    $("loginError").textContent=error.message;
+    $("loginError").classList.remove("hidden");
+  }
+};
+$("clearCode").onclick=()=>{
+  $("adminCode").value="";
+  $("adminCode").focus();
+};
+$("ownerBtn").onclick=()=>location.href="./owner.html";
+$("reloadBtn").onclick=load;
+$("logoutBtn").onclick=()=>{
+  sessionStorage.removeItem(KEY);
+  session=null;
+  showLogin();
+};
+document.querySelectorAll("[data-filter]").forEach(button=>{
+  button.onclick=()=>{
+    document.querySelectorAll("[data-filter]").forEach(x=>x.classList.toggle("active",x===button));
+    filter=button.dataset.filter;
+    renderTrips();
+  };
+});
+
+try{
+  const stored=JSON.parse(sessionStorage.getItem(KEY)||"null");
+  if(stored?.token&&Number(stored.expires_at||0)>Date.now()){
+    session=stored;
+    showApp();
+    load();
+  }else{
+    showLogin();
+  }
+}catch{
+  showLogin();
+}
+})();
 </script></body></html>

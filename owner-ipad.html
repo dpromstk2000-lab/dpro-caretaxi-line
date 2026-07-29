@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#075d61">
+  <meta name="color-scheme" content="light">
+<meta name="theme-color" content="#075d61">
   <title>DPRO介護タクシー｜iPad配車</title>
   <script src="config.js"></script>
   <style>
@@ -95,7 +96,18 @@
       .board{grid-template-columns:repeat(5,86vw)}
       .sheet{width:100vw}.grid2{grid-template-columns:1fr}.wide{grid-column:auto}
     }
-  </style>
+  
+/* CARETAXI-11 最終UI・アクセシビリティ調整 */
+:focus-visible{outline:3px solid #f5a623!important;outline-offset:2px!important}
+button:disabled,input:disabled,select:disabled,textarea:disabled{cursor:not-allowed;opacity:.62}
+.date-control{position:relative;display:flex;align-items:center;justify-content:center;min-height:46px;min-width:230px;border:1px solid var(--line,#c7dadd);border-radius:10px;background:#fff;color:var(--deep,#064c51);font-weight:900;padding:0 44px 0 14px;overflow:hidden}
+.date-control::after{content:"📅";position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.date-control .date-display{pointer-events:none;white-space:nowrap}
+.date-control input[type="date"]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
+@media(max-width:650px){.date-control{min-width:0;width:100%;font-size:14px;padding-left:10px;padding-right:38px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+</style>
 </head>
 <body>
 <div id="loginView" class="login">
@@ -103,7 +115,7 @@
     <small><b>DPRO CARE TAXI</b></small>
     <h1>iPad配車画面</h1>
     <p>受付・配車・当日の運行状況を、タッチ操作で確認します。</p>
-    <div id="loginError" class="error hidden"></div>
+    <div id="loginError" class="error hidden" role="alert"></div>
     <div class="field">
       <label for="adminCode">管理コード</label>
       <div class="code">
@@ -129,7 +141,7 @@
   <main class="shell">
     <section class="datebar">
       <button id="prevDate" type="button">← 前日</button>
-      <input id="targetDate" type="date">
+      <label class="date-control"><span id="dateDisplay" class="date-display">日付を選択</span><input id="targetDate" type="date" aria-label="表示日を選択"></label>
       <button id="nextDate" type="button">翌日 →</button>
       <button id="todayBtn" class="today" type="button">今日</button>
     </section>
@@ -138,14 +150,14 @@
   </main>
 </div>
 
-<div id="detail" class="detail" aria-hidden="true">
+<div id="detail" class="detail" role="dialog" aria-modal="true" aria-labelledby="detailTitle" aria-hidden="true">
   <div class="backdrop" data-close="1"></div>
   <aside class="sheet">
-    <div class="sheet-head"><h2 id="detailTitle">予約詳細</h2><button class="close" data-close="1" type="button">×</button></div>
+    <div class="sheet-head"><h2 id="detailTitle">予約詳細</h2><button class="close" aria-label="閉じる" data-close="1" type="button">×</button></div>
     <div id="detailBody" class="sheet-body"></div>
   </aside>
 </div>
-<div id="toast" class="toast"></div>
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script>
 (()=>{
@@ -173,15 +185,20 @@ function authHeaders(){return session?.token?{Authorization:`Bearer ${session.to
 async function api(path,{method="GET",body}={}){
   const r=await fetch(API+path,{method,headers:{"Content-Type":"application/json",...authHeaders()},body:body?JSON.stringify(body):undefined});
   let j={};try{j=await r.json()}catch{}
-  if(!r.ok||j.ok===false)throw new Error(j.message||j.error?.message||`通信エラー (${r.status})`);
+  if(r.status===401){clearSession();showLogin();throw new Error("セッションの有効期限が切れました。再度ログインしてください。")}if(!r.ok||j.ok===false)throw new Error(j.message||j.error?.message||`通信エラー (${r.status})`);
   return j;
 }
 function toast(msg,bad=false){const t=$("toast");t.textContent=msg;t.className="toast show"+(bad?" bad":"");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.className="toast",2600)}
 function dateText(v){if(!v)return"-";return new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",month:"2-digit",day:"2-digit",weekday:"short",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(v))}
 function timeText(v){if(!v)return"--:--";return new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(v))}
 function yen(v){return v==null?"確認中":Number(v).toLocaleString("ja-JP")+"円"}
-function localValue(v){if(!v)return"";const d=new Date(v);const p=n=>String(n).padStart(2,"0");return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
-function addDate(days){const d=new Date($("targetDate").value+"T12:00:00");d.setDate(d.getDate()+days);$("targetDate").value=d.toLocaleDateString("sv-SE");load()}
+function tokyoDateValue(value=new Date()){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit"}).format(value)}
+function dateDisplayText(value){if(!/^\d{4}-\d{2}-\d{2}$/.test(String(value||"")))return"日付を選択";const [y,m,d]=value.split("-").map(Number);const weekday=new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",weekday:"short"}).format(new Date(`${value}T12:00:00+09:00`));return `${y}年${m}月${d}日（${weekday}）`}
+function syncDateDisplay(){const e=$("dateDisplay");if(e)e.textContent=dateDisplayText($("targetDate").value)}
+function setTargetDate(value,reload=false){$("targetDate").value=value;syncDateDisplay();if(reload)load()}
+function shiftTargetDate(days){const value=$("targetDate").value||tokyoDateValue();const [y,m,d]=value.split("-").map(Number);const shifted=new Date(Date.UTC(y,m-1,d+days,3,0,0));setTargetDate(tokyoDateValue(shifted),true)}
+function localValue(v){if(!v)return"";const parts=Object.fromEntries(new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date(v)).filter(x=>x.type!=="literal").map(x=>[x.type,x.value]));return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`}
+function addDate(days){shiftTargetDate(days)}
 
 function stage(t){
   if(["requested","reviewing","estimate_sent","customer_confirmation"].includes(t.status))return"pending";
@@ -311,13 +328,13 @@ $("loginForm").onsubmit=async e=>{
 $("clearCode").onclick=()=>{$("adminCode").value="";$("adminCode").focus()};
 $("reloadBtn").onclick=load;
 $("logoutBtn").onclick=()=>{clearSession();showLogin()};
-$("targetDate").onchange=load;
+$("targetDate").onchange=()=>{syncDateDisplay();load()};
 $("prevDate").onclick=()=>addDate(-1);
 $("nextDate").onclick=()=>addDate(1);
-$("todayBtn").onclick=()=>{$("targetDate").value=new Date().toLocaleDateString("sv-SE");load()};
-document.querySelectorAll("[data-close]").forEach(e=>e.onclick=()=>{$("detail").classList.remove("open");$("detail").setAttribute("aria-hidden","true");current=null;render()});
+$("todayBtn").onclick=()=>setTargetDate(tokyoDateValue(),true);
+document.querySelectorAll("[data-close]").forEach(e=>e.onclick=()=>{$("detail").classList.remove("open");$("detail").setAttribute("aria-hidden","true");current=null;render()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("detail").classList.contains("open")){$("detail").classList.remove("open");$("detail").setAttribute("aria-hidden","true");current=null;render()}});
 
-$("targetDate").value=new Date().toLocaleDateString("sv-SE");
+setTargetDate(tokyoDateValue());
 try{
   const s=JSON.parse(sessionStorage.getItem(SESSION_KEY)||"null");
   if(s?.token&&Number(s.expires_at||0)>Date.now()){session=s;showApp();load()}else{clearSession();showLogin()}

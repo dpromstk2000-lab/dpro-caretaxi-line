@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
 <meta name="theme-color" content="#075d61">
 <title>DPRO介護タクシー｜顧客・乗車者台帳</title>
 <script src="config.js"></script>
@@ -20,13 +21,24 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
 .linkitem,.place,.trip{border:1px solid #d5e3e5;border-radius:10px;padding:9px;margin-bottom:7px}.linkitem b,.trip b{font-size:15px}.small{font-size:12px;color:var(--muted)}.route{background:#f1f6f7;border-radius:8px;padding:7px;margin-top:5px;font-weight:800}.warning{background:#fff3d7;border:1px solid #e5c06e;border-radius:9px;padding:9px;margin-bottom:7px;color:#764900;font-weight:800}.check{display:flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:8px;background:#fff}.checks{display:flex;gap:6px;flex-wrap:wrap}
 .login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(145deg,#e8f1f2,#d4e6e8)}.loginbox{width:min(500px,100%);background:#fff;border-radius:20px;padding:26px;box-shadow:0 22px 60px rgba(6,75,80,.2)}.loginbox h1{margin:3px 0}.loginbox p{color:var(--muted)}.code{display:flex;gap:7px}.code input{flex:1;min-height:49px;border:1px solid var(--line);border-radius:10px;padding:0 12px}.code button{width:50px;border:1px solid var(--line);border-radius:10px;background:#edf4f5;font-size:22px}.loginbox .primary{width:100%;margin-top:10px}.error{background:#fff0ef;border:1px solid #e8b0ac;color:#a6322d;border-radius:9px;padding:9px;margin:8px 0}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:80;background:#153e42;color:#fff;padding:12px 18px;border-radius:11px;box-shadow:var(--shadow);display:none;font-weight:800}.toast.show{display:block}.toast.bad{background:#a63630}
 @media(max-width:950px){.layout{grid-template-columns:1fr}.list{max-height:390px}.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.top{position:static;padding:13px}.brand h1{font-size:21px}.shell{padding:9px}.metrics{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.wide{grid-column:auto}.actions button{min-height:40px;padding:0 9px}.entrymeta{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}
+
+/* CARETAXI-11 最終UI・アクセシビリティ調整 */
+:focus-visible{outline:3px solid #f5a623!important;outline-offset:2px!important}
+button:disabled,input:disabled,select:disabled,textarea:disabled{cursor:not-allowed;opacity:.62}
+.date-control{position:relative;display:flex;align-items:center;justify-content:center;min-height:46px;min-width:230px;border:1px solid var(--line,#c7dadd);border-radius:10px;background:#fff;color:var(--deep,#064c51);font-weight:900;padding:0 44px 0 14px;overflow:hidden}
+.date-control::after{content:"📅";position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.date-control .date-display{pointer-events:none;white-space:nowrap}
+.date-control input[type="date"]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
+@media(max-width:650px){.date-control{min-width:0;width:100%;font-size:14px;padding-left:10px;padding-right:38px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
 </style>
 </head>
 <body>
 <div id="loginView" class="login">
 <form id="loginForm" class="loginbox">
 <small><b>DPRO CARE TAXI</b></small><h1>顧客・乗車者台帳</h1><p>予約者、乗車者、家族関係、よく行く場所、利用履歴を管理します。</p>
-<div id="loginError" class="error hidden"></div>
+<div id="loginError" class="error hidden" role="alert"></div>
 <label><b>管理コード</b></label><div class="code"><input id="adminCode" type="password" inputmode="numeric" placeholder="デモ：1234" required><button id="clearCode" type="button">×</button></div>
 <button class="btn primary" type="submit">台帳を開く</button>
 </form>
@@ -49,7 +61,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
 </div>
 </main>
 </div>
-<div id="toast" class="toast"></div>
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script>
 (()=>{
@@ -65,7 +77,7 @@ function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 function dt(v){if(!v)return"-";return new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(v))}
 function yen(v){return v==null?"未登録":Number(v).toLocaleString("ja-JP")+"円"}
 function auth(){return session?.token?{Authorization:`Bearer ${session.token}`}:{}} 
-async function api(path,{body={},method="POST"}={}){const r=await fetch(API+path,{method,headers:{"Content-Type":"application/json",...auth()},body:method==="GET"?undefined:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok||j.ok===false)throw new Error(j.message||`通信エラー (${r.status})`);return j}
+async function api(path,{body={},method="POST"}={}){const r=await fetch(API+path,{method,headers:{"Content-Type":"application/json",...auth()},body:method==="GET"?undefined:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(r.status===401){sessionStorage.removeItem(KEY);session=null;showLogin();throw new Error("セッションの有効期限が切れました。再度ログインしてください。")}if(!r.ok||j.ok===false)throw new Error(j.message||`通信エラー (${r.status})`);return j}
 function toast(m,b=false){const t=$("toast");t.textContent=m;t.className="toast show"+(b?" bad":"");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.className="toast",2600)}
 function showLogin(){$("loginView").classList.remove("hidden");$("appView").classList.add("hidden")}function showApp(){$("loginView").classList.add("hidden");$("appView").classList.remove("hidden")}
 function arrText(v){return Array.isArray(v)?v.join("、"):""}function arrValue(v){return String(v||"").split(/[、,\n]/).map(x=>x.trim()).filter(Boolean)}

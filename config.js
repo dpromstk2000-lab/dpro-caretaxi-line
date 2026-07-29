@@ -1,11 +1,39 @@
 /**
  * DPRO 介護タクシー LINE
- * STEP CARETAXI-11 公開設定
+ * STEP CARETAXI-12 営業サイト用・認証不要の読取専用プレビュー
  * 秘密鍵・Service Role Key・LINE Channel Secretは絶対に記載しないこと。
  */
+(() => {
+  "use strict";
+  const params = new URLSearchParams(window.location.search);
+  const previewRequested =
+    params.get("preview") === "1" || params.get("embed_demo") === "1";
+
+  if (!previewRequested) return;
+
+  const page = window.location.pathname.split("/").pop() || "";
+  const screenMap = Object.freeze({
+    "owner.html": "owner",
+    "owner-ipad.html": "dispatch",
+    "staff.html": "staff",
+    "billing.html": "billing",
+    "ledger.html": "ledger"
+  });
+  const screen = screenMap[page];
+  if (!screen) return;
+
+  const version = params.get("v") || "CARETAXI-12";
+  const embed = params.get("embed_demo") === "1" ? "&embed_demo=1" : "";
+  const target =
+    `./preview.html?screen=${encodeURIComponent(screen)}` +
+    `&v=${encodeURIComponent(version)}${embed}`;
+
+  window.location.replace(target);
+})();
+
 window.CARETAXI_CONFIG = Object.freeze({
   APP_NAME: "DPRO 介護タクシー LINE",
-  VERSION: "CARETAXI-11-FINAL-AUDIT-20260729",
+  VERSION: "CARETAXI-12-READONLY-PREVIEW-20260729",
   API_BASE_URL: "https://dpro-caretaxi-line-api.dpromstk2000.workers.dev",
   ORGANIZATION_CODE: "dpro_caretaxi_demo",
   LIFF_ID: "",

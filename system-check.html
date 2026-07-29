@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#075d61">
+<title>DPRO介護タクシー｜営業前システム検査</title>
+<script src="config.js"></script>
+<style>
+:root{--main:#076b6e;--deep:#064b50;--bg:#eaf2f3;--card:#fff;--line:#c8dadd;--muted:#657b80;--ok:#187247;--bad:#b43b35;--warn:#8a5900;--shadow:0 8px 24px rgba(17,67,73,.12)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;background:var(--bg);color:#153b3f;font-size:16px}
+button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.top{background:linear-gradient(120deg,var(--deep),var(--main));color:#fff;padding:16px 22px;position:sticky;top:0;z-index:20;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.topin{max-width:1450px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand small{font-weight:900;letter-spacing:.14em}.brand h1{font-size:26px;margin:2px 0}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{min-height:43px;border:0;border-radius:10px;background:#fff;color:var(--deep);padding:0 13px;font-weight:900}
+.shell{max-width:1450px;margin:auto;padding:14px}.notice{background:#fff5da;border:1px solid #e4c16f;border-radius:11px;padding:11px 13px;color:#754900;font-weight:800;margin-bottom:10px}
+.hero{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px}.hero h2{margin:0;font-size:22px}.hero p{margin:4px 0;color:var(--muted)}.run{display:flex;gap:8px;flex-wrap:wrap}.btn{min-height:46px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--deep);padding:8px 14px;font-weight:900}.primary{background:var(--main);border-color:var(--main);color:#fff}.warn{background:#fff5dc;border-color:#dfb85e;color:#795000}
+.overall{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}.metric{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px 12px;box-shadow:var(--shadow)}.metric span{display:block;color:var(--muted);font-size:12px;font-weight:800}.metric strong{font-size:23px}.good{color:var(--ok)}.bad{color:var(--bad)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}.head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 13px;border-bottom:1px solid var(--line)}.head h3{font-size:18px;margin:0}.body{padding:11px}
+.check{display:grid;grid-template-columns:31px 1fr auto;gap:9px;align-items:center;border-bottom:1px solid #e0eaec;padding:9px 2px}.check:last-child{border-bottom:0}.icon{display:grid;place-items:center;width:29px;height:29px;border-radius:999px;font-weight:950}.icon.ok{background:#dcf3e5;color:var(--ok)}.icon.ng{background:#ffe5e3;color:var(--bad)}.label{font-weight:900}.actual{font-size:12px;color:var(--muted);text-align:right;max-width:260px;word-break:break-word}
+.pages{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.page{border:1px solid var(--line);border-radius:10px;padding:9px;background:#f7fafb}.page b{display:block}.page small{color:var(--muted)}.page a{display:inline-block;margin-top:5px;color:var(--main);font-weight:900;text-decoration:none}
+details{border:1px solid var(--line);border-radius:10px;margin-top:8px;background:#f8fbfb}summary{padding:9px;font-weight:900;cursor:pointer}pre{white-space:pre-wrap;word-break:break-word;font-size:12px;padding:10px;margin:0;max-height:360px;overflow:auto}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(145deg,#e7f1f2,#d4e6e8)}.loginbox{width:min(510px,100%);background:#fff;border-radius:20px;padding:27px;box-shadow:0 24px 65px rgba(6,75,80,.2)}.loginbox h1{margin:3px 0}.loginbox p{color:var(--muted)}.code{display:flex;gap:7px}.code input{flex:1;min-height:49px;border:1px solid var(--line);border-radius:10px;padding:0 12px}.code button{width:50px;border:1px solid var(--line);border-radius:10px;background:#edf4f5;font-size:22px}.loginbox .primary{width:100%;margin-top:10px}.error{background:#fff0ef;border:1px solid #e8b0ac;color:#a6322d;border-radius:9px;padding:9px;margin:8px 0}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:50;background:#153e42;color:#fff;padding:12px 18px;border-radius:11px;box-shadow:var(--shadow);display:none;font-weight:800}.toast.show{display:block}.toast.bad{background:#a63630}
+@media(max-width:950px){.grid{grid-template-columns:1fr}.overall{grid-template-columns:repeat(3,1fr)}.pages{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.top{position:static;padding:13px}.brand h1{font-size:21px}.shell{padding:9px}.hero{grid-template-columns:1fr}.overall{grid-template-columns:repeat(2,1fr)}.pages{grid-template-columns:1fr}.actual{max-width:140px}}
+</style>
+</head>
+<body>
+<div id="loginView" class="login">
+<form id="loginForm" class="loginbox">
+<small><b>DPRO CARE TAXI</b></small><h1>営業前システム検査</h1>
+<p>Worker、データベース、デモデータ、主要画面ファイルを一括確認します。</p>
+<div id="loginError" class="error hidden"></div>
+<label><b>管理コード</b></label>
+<div class="code"><input id="adminCode" type="password" inputmode="numeric" placeholder="デモ：1234" required><button id="clearCode" type="button">×</button></div>
+<button class="btn primary" type="submit">検査画面を開く</button>
+</form>
+</div>
+
+<div id="appView" class="hidden">
+<header class="top"><div class="topin"><div class="brand"><small>DPRO CARE TAXI</small><h1 id="title">営業前システム検査</h1></div><div class="actions"><button id="ownerBtn">管理者PC</button><button id="logoutBtn">ログアウト</button></div></div></header>
+<main class="shell">
+<div class="notice">「デモデータを準備」は、dpro_caretaxi_demo内のデモ専用データだけを初期状態へ戻します。実事業所データには使用できません。</div>
+<section class="hero"><div><h2 id="overallTitle">未検査</h2><p id="overallNote">「一括チェック」を押してください。</p></div><div class="run"><button id="checkBtn" class="btn primary">一括チェック</button><button id="prepareBtn" class="btn warn">デモデータを準備</button></div></section>
+<section id="overall" class="overall"></section>
+<div class="grid">
+<section class="panel"><div class="head"><h3>Worker・環境設定</h3><span id="workerBadge">未検査</span></div><div id="workerChecks" class="body"></div></section>
+<section class="panel"><div class="head"><h3>DB構造・RLS</h3><span id="dbBadge">未検査</span></div><div id="databaseChecks" class="body"></div></section>
+<section class="panel"><div class="head"><h3>主要機能の統合検査</h3><span id="integrationBadge">未検査</span></div><div id="integrationChecks" class="body"></div></section>
+<section class="panel"><div class="head"><h3>公開ファイル</h3><span id="pageBadge">未検査</span></div><div id="pageChecks" class="body pages"></div></section>
+</div>
+<section class="panel" style="margin-top:10px"><div class="head"><h3>検査詳細</h3><span id="checkedAt">-</span></div><div class="body"><details><summary>JSON詳細を表示</summary><pre id="rawJson">{}</pre></details></div></section>
+</main>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+(()=>{
+"use strict";
+const C=window.CARETAXI_CONFIG||{},API=String(C.API_BASE_URL||"").replace(/\/+$/,""),ORG=C.ORGANIZATION_CODE||"dpro_caretaxi_demo",KEY=C.ADMIN_SESSION_KEY||"dpro_caretaxi_admin_session_v1";
+const $=id=>document.getElementById(id);let session=null,last=null;
+const files=[
+  ["送迎依頼","index.html"],["会員・家族","member.html"],["管理者PC","owner.html"],
+  ["iPad配車","owner-ipad.html"],["スタッフ運行","staff.html"],["料金・支払","billing.html"],
+  ["顧客・乗車者台帳","ledger.html"],["system-check","system-check.html"],["公開設定","config.js"]
+];
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function auth(){return session?.token?{Authorization:`Bearer ${session.token}`}:{}} 
+async function api(path,{body={},method="POST"}={}){const r=await fetch(API+path,{method,headers:{"Content-Type":"application/json",...auth()},body:method==="GET"?undefined:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok||j.ok===false)throw new Error(j.message||`通信エラー (${r.status})`);return j}
+function toast(m,b=false){const t=$("toast");t.textContent=m;t.className="toast show"+(b?" bad":"");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.className="toast",2800)}
+function showLogin(){$("loginView").classList.remove("hidden");$("appView").classList.add("hidden")}function showApp(){$("loginView").classList.add("hidden");$("appView").classList.remove("hidden")}
+function checkRow(label,ok,actual){return`<div class="check"><span class="icon ${ok?"ok":"ng"}">${ok?"✓":"!"}</span><div class="label">${esc(label)}</div><div class="actual">${esc(typeof actual==="object"?JSON.stringify(actual):actual??"")}</div></div>`}
+function badge(id,ok,text){const e=$(id);e.textContent=text|| (ok?"合格":"要確認");e.className=ok?"good":"bad"}
+async function fileChecks(){return Promise.all(files.map(async([label,path])=>{try{const r=await fetch(`./${path}?check=${Date.now()}`,{cache:"no-store"});return{label,path,ok:r.ok,status:r.status}}catch(e){return{label,path,ok:false,status:0,error:e.message}}}))}
+function render(result,pages){
+  last={result,pages};const worker=result.worker_checks||{},db=result.database||{},integration=result.integration||{};
+  const workerEntries=Object.entries(worker);const workerOk=workerEntries.length>0&&workerEntries.every(([,v])=>Boolean(v));
+  const dbOk=Boolean(db.ok),integrationOk=Boolean(integration.ok),pageOk=pages.every(x=>x.ok),allOk=Boolean(result.ok)&&pageOk;
+  $("overallTitle").textContent=allOk?"全項目合格":"確認が必要な項目があります";$("overallTitle").className=allOk?"good":"bad";
+  $("overallNote").textContent=allOk?"営業前検査は完了です。":"赤い項目の詳細を確認してください。";
+  $("overall").innerHTML=[
+    ["総合",allOk?"合格":"要確認"],["Worker",result.worker_version||"-"],["DB",db.version||"-"],
+    ["統合検査",`${integration.passed||0}/${integration.total||0}`],["公開ファイル",`${pages.filter(x=>x.ok).length}/${pages.length}`]
+  ].map(([n,v],i)=>`<div class="metric"><span>${n}</span><strong class="${i===0?(allOk?"good":"bad"):""}">${esc(v)}</strong></div>`).join("");
+  $("workerChecks").innerHTML=workerEntries.map(([k,v])=>checkRow(k,Boolean(v),v)).join("")||'<div class="empty">結果なし</div>';
+  badge("workerBadge",workerOk);
+  const s=db.summary||{};$("databaseChecks").innerHTML=[
+    ["テーブル",Number(s.missing_tables||0)===0,`不足 ${s.missing_tables||0}`],
+    ["関数",Number(s.missing_functions||0)===0,`不足 ${s.missing_functions||0}`],
+    ["制約",Number(s.missing_constraints||0)===0,`不足 ${s.missing_constraints||0}`],
+    ["インデックス",Number(s.missing_indexes||0)===0,`不足 ${s.missing_indexes||0}`],
+    ["RLS",Number(s.rls_disabled_tables||0)===0,`無効 ${s.rls_disabled_tables||0}`],
+    ["デモ事業所",Boolean(s.demo_prepared),s.demo_prepared]
+  ].map(x=>checkRow(...x)).join("");badge("dbBadge",dbOk);
+  $("integrationChecks").innerHTML=(integration.checks||[]).map(x=>checkRow(x.label,Boolean(x.ok),x.actual)).join("")||'<div class="empty">結果なし</div>';badge("integrationBadge",integrationOk,`${integration.passed||0}/${integration.total||0}`);
+  $("pageChecks").innerHTML=pages.map(x=>`<div class="page"><b class="${x.ok?"good":"bad"}">${x.ok?"✓":"!"} ${esc(x.label)}</b><small>HTTP ${x.status}</small><a href="./${esc(x.path)}" target="_blank" rel="noopener">開く</a></div>`).join("");badge("pageBadge",pageOk,`${pages.filter(x=>x.ok).length}/${pages.length}`);
+  $("checkedAt").textContent=new Date(result.checked_at||Date.now()).toLocaleString("ja-JP");$("rawJson").textContent=JSON.stringify(last,null,2);
+}
+async function runCheck(){try{$("checkBtn").disabled=true;$("overallTitle").textContent="検査中…";const [result,pages]=await Promise.all([api("/v1/system/check",{body:{}}),fileChecks()]);render(result,pages);toast(result.ok&&pages.every(x=>x.ok)?"全項目合格です":"確認項目があります",!(result.ok&&pages.every(x=>x.ok)))}catch(e){toast(e.message,true);$("overallTitle").textContent="検査に失敗しました";$("overallTitle").className="bad"}finally{$("checkBtn").disabled=false}}
+async function prepare(){try{if(!confirm("デモ専用の申請・見積・入金・事故報告を初期状態へ戻します。よろしいですか？"))return;$("prepareBtn").disabled=true;const j=await api("/v1/demo/prepare",{body:{organization_code:ORG}});toast("デモデータを準備しました");await runCheck();$("rawJson").textContent=JSON.stringify({prepare:j,check:last},null,2)}catch(e){toast(e.message,true)}finally{$("prepareBtn").disabled=false}}
+$("loginForm").onsubmit=async e=>{e.preventDefault();$("loginError").classList.add("hidden");try{const j=await api("/v1/auth/admin",{body:{code:$("adminCode").value,organization_code:ORG}});session={token:j.token,expires_at:Date.now()+Number(j.expires_in||900)*1000};sessionStorage.setItem(KEY,JSON.stringify(session));showApp();await runCheck()}catch(err){$("loginError").textContent=err.message;$("loginError").classList.remove("hidden")}};
+$("clearCode").onclick=()=>{$("adminCode").value="";$("adminCode").focus()};$("ownerBtn").onclick=()=>location.href="./owner.html";$("logoutBtn").onclick=()=>{sessionStorage.removeItem(KEY);session=null;showLogin()};$("checkBtn").onclick=runCheck;$("prepareBtn").onclick=prepare;
+try{const s=JSON.parse(sessionStorage.getItem(KEY)||"null");if(s?.token&&Number(s.expires_at||0)>Date.now()){session=s;showApp();runCheck()}else showLogin()}catch{showLogin()}
+})();
+</script>
+</body>
+</html>

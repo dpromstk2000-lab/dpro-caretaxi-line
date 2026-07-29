@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#075d61">
-  <title>DPRO介護タクシー｜管理者PC</title>
+  <title>DPRO介護タクシー｜公開操作デモ・管理者PC</title>
   <script src="config.js"></script>
   <style>
     :root{--main:#08676a;--deep:#064b50;--navy:#163a4a;--bg:#eef5f6;--card:#fff;--line:#cddfe1;--muted:#60767b;--ok:#157a4c;--warn:#b86c00;--danger:#bd3d36;--info:#246bb2;--shadow:0 10px 30px rgba(26,76,82,.10)}
@@ -30,20 +30,87 @@ button:disabled,input:disabled,select:disabled,textarea:disabled{cursor:not-allo
 @media(max-width:650px){.date-control{min-width:0;width:100%;font-size:14px;padding-left:10px;padding-right:38px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
+
+/* DPRO-SYSTEMS-5 CARETAXI OPERATION DEMO */
+.operation-demo-banner{
+  width:min(1080px,calc(100% - 28px));
+  margin:16px auto 0;
+  padding:16px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  border:1px solid #b9d9d6;
+  border-radius:17px;
+  background:linear-gradient(135deg,#f7fcfb,#e7f5f4);
+  box-shadow:0 12px 30px rgba(15,92,98,.08);
+}
+.operation-demo-banner>div{display:flex;flex-direction:column}
+.operation-demo-banner small{
+  color:var(--primary,#0f5c62);
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.14em;
+}
+.operation-demo-banner strong{font-size:17px;line-height:1.4}
+.operation-demo-banner span{margin-top:3px;color:var(--muted,#5a6b74);font-size:12px;font-weight:700}
+.operation-demo-banner a,
+.official-demo-link{
+  flex:0 0 auto;
+  min-height:42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 14px;
+  border-radius:999px;
+  color:#fff!important;
+  background:var(--primary,#0f5c62);
+  text-decoration:none!important;
+  font-size:12px;
+  font-weight:900;
+  box-shadow:0 9px 22px rgba(15,92,98,.18);
+}
+.operation-demo-banner.compact{
+  width:min(1100px,calc(100% - 44px));
+  margin-top:14px;
+}
+.login-card .official-demo-link{
+  width:100%;
+  margin-top:10px;
+  background:#fff;
+  color:var(--primary-dark,var(--deep,#084b50))!important;
+  border:1px solid #b9d6d4;
+  box-shadow:none;
+}
+.top .official-demo-link{
+  min-height:42px;
+  padding:7px 12px;
+  border:1px solid rgba(255,255,255,.5);
+  background:rgba(255,255,255,.11);
+  box-shadow:none;
+}
+@media(max-width:720px){
+  .operation-demo-banner{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .operation-demo-banner a{width:100%}
+  .operation-demo-banner.compact{width:min(100% - 24px,1100px)}
+}
 </style>
 </head>
-<body>
+<body class="operation-demo-page">
 <div id="loginView" class="login-wrap">
   <form id="loginForm" class="login-card">
-    <div class="muted"><b>DPRO CARE TAXI</b></div><h1>管理者PC</h1><p class="muted">電話受付・見積・予約確定・配車・当日の状況を管理します。</p>
+    <div class="muted"><b>DPRO CARE TAXI / OPERATION DEMO</b></div><h1>管理者PC 操作デモ</h1><p class="muted">電話受付・見積・予約確定・配車・当日の状況を管理します。</p>
     <div id="loginError" class="error hidden" role="alert"></div>
     <div class="field"><label for="adminCode">管理コード</label><div class="code-wrap"><input id="adminCode" type="password" inputmode="numeric" autocomplete="current-password" placeholder="デモ：1234" required><button id="clearCode" class="clear-btn" type="button" aria-label="管理コードを消去">×</button></div></div>
-    <button class="btn-primary" type="submit">管理画面を開く</button><p class="muted">本番環境では管理コード1234を使用できません。</p>
+    <button class="btn-primary" type="submit">管理画面を開く</button><a class="official-demo-link" href="https://dpro-shop.com/systems/caretaxi">公式の機能説明を見る</a><p class="muted">公開デモは架空情報を使用します。実在する個人情報は入力しないでください。</p>
   </form>
 </div>
 <div id="appView" class="hidden">
-  <header class="top"><div class="top-inner"><div class="brand"><small>DPRO CARE TAXI</small><h1 id="orgName">介護タクシー 管理者PC</h1></div><div class="top-actions"><span id="envPill" class="pill">デモ環境</span><button id="phoneOpen">＋ 電話受付</button><button id="systemCheckOpen">システム検査</button><button id="ledgerOpen">顧客台帳</button><button id="billingOpen">￥ 料金管理</button><button id="reloadBtn">最新情報</button><button id="logoutBtn">ログアウト</button></div></div></header>
-  <main class="shell"><div id="demoAlert" class="alert">営業デモ環境です。表示される氏名・住所・予約は架空情報です。</div>
+  <header class="top"><div class="top-inner"><div class="brand"><small>DPRO CARE TAXI</small><h1 id="orgName">介護タクシー 管理者PC</h1></div><div class="top-actions"><span id="envPill" class="pill">デモ環境</span><button id="phoneOpen">＋ 電話受付</button><a class="official-demo-link" href="https://dpro-shop.com/systems/caretaxi">公式説明</a><button id="ledgerOpen">顧客台帳</button><button id="billingOpen">￥ 料金管理</button><button id="reloadBtn">最新情報</button><button id="logoutBtn">ログアウト</button></div></div></header>
+  <main class="shell"><div id="demoAlert" class="alert">公開操作デモです。表示される氏名・住所・予約はすべて架空情報です。</div>
     <section id="metrics" class="dashboard"></section>
     <div class="toolbar"><button class="active" data-filter="all">すべて</button><button data-filter="pending">未確認</button><button data-filter="today">本日</button><button data-filter="unassigned">未配車</button><button data-filter="return_waiting">帰り連絡待ち</button><button data-filter="member_request">会員申請あり</button><span class="spacer"></span><label class="date-control"><span id="dateDisplay" class="date-display">日付を選択</span><input id="targetDate" type="date" aria-label="表示日を選択"></label><button id="customerOpen">顧客検索</button></div>
     <section class="panel"><div class="panel-head"><div><h2>送迎予約・当日運行</h2><div id="listSummary" class="muted"></div></div></div><div class="table-wrap"><table><thead><tr><th>日時・受付</th><th>利用者</th><th>送迎区間</th><th>状態</th><th>配車</th><th>金額</th><th>操作</th></tr></thead><tbody id="tripRows"></tbody></table><div id="emptyList" class="empty hidden">該当する送迎はありません。</div></div></section>
@@ -94,7 +161,7 @@ ${(x.member_requests||[]).length?`<h3 class="section-title">会員・家族か�
 $("reviewAction").onclick=()=>action(t.id,"start_review",{});$("confirmAction").onclick=()=>action(t.id,"confirm",{});$("estimateAction").onclick=()=>action(t.id,"save_estimate",{total_yen:Number($("estimateYen").value),customer_message:$("estimateMessage").value});$("notesAction").onclick=()=>action(t.id,"save_notes",{internal_notes:$("internalNotes").value});$("cancelAction").onclick=()=>{if(confirm("この予約をキャンセルしますか？"))action(t.id,"cancel",{reason:$("cancelReason").value})};$("assignAction").onclick=()=>assign(leg.id);document.querySelectorAll("[data-request]").forEach(b=>b.onclick=()=>action(t.id,"handle_member_request",{request_id:b.dataset.request,status:b.dataset.resolution}))}
 async function assign(legId){try{const assistants=[...document.querySelectorAll('input[name="assistants"]:checked')].map(x=>x.value);const equipment=[...document.querySelectorAll('input[name="equipment"]:checked')].map(x=>x.value);await api("/v1/admin/assign",{method:"POST",body:{trip_leg_id:legId,vehicle_id:$("assignVehicle").value,driver_staff_id:$("assignDriver").value,assistant_staff_ids:assistants,equipment_ids:equipment,reserved_from:new Date($("reservedFrom").value).toISOString(),reserved_until:new Date($("reservedUntil").value).toISOString()}});toast("配車を登録しました");await load();await openTrip(currentTrip.trip.id)}catch(e){toast(e.message,true)}}
 function close(kind){const id=kind==="drawer"?"tripDrawer":kind==="phone"?"phoneModal":"customerModal";$(id).classList.remove("open");$(id).setAttribute("aria-hidden","true")}document.querySelectorAll("[data-close]").forEach(e=>e.onclick=()=>close(e.dataset.close));document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;["tripDrawer","phoneModal","customerModal"].forEach(id=>{$(id).classList.remove("open");$(id).setAttribute("aria-hidden","true")})});
-$("systemCheckOpen").onclick=()=>location.href="./system-check.html";$("ledgerOpen").onclick=()=>location.href="./ledger.html";$("billingOpen").onclick=()=>location.href="./billing.html";$("phoneOpen").onclick=()=>{$("phoneForm").reset();$("selectedCustomerId").value="";$("selectedPassengerId").value="";$("phoneSearchResults").innerHTML="";const d=new Date(Date.now()+24*3600e3);d.setMinutes(Math.ceil(d.getMinutes()/30)*30,0,0);$("pcPickupAt").value=isoLocal(d);$("phoneModal").classList.add("open");$("phoneModal").setAttribute("aria-hidden","false")};$("customerOpen").onclick=()=>{$("customerModal").classList.add("open");$("customerModal").setAttribute("aria-hidden","false")};
+$("ledgerOpen").onclick=()=>location.href="./ledger.html";$("billingOpen").onclick=()=>location.href="./billing.html";$("phoneOpen").onclick=()=>{$("phoneForm").reset();$("selectedCustomerId").value="";$("selectedPassengerId").value="";$("phoneSearchResults").innerHTML="";const d=new Date(Date.now()+24*3600e3);d.setMinutes(Math.ceil(d.getMinutes()/30)*30,0,0);$("pcPickupAt").value=isoLocal(d);$("phoneModal").classList.add("open");$("phoneModal").setAttribute("aria-hidden","false")};$("customerOpen").onclick=()=>{$("customerModal").classList.add("open");$("customerModal").setAttribute("aria-hidden","false")};
 async function search(q,target,selectable){try{const j=await api("/v1/admin/customer-search",{method:"POST",body:{query:q}});target.innerHTML=(j.items||[]).map((c,i)=>`<button type="button" class="search-item" data-customer="${i}"><b>${esc(c.full_name)}｜${esc(c.phone||"")}</b><div>${esc(c.customer_no)} ${esc(c.affiliated_organization||"")}</div><div class="muted">利用者：${esc((c.passengers||[]).map(p=>p.full_name).join("、")||"未登録")}</div></button>`).join("")||'<div class="empty">該当なし</div>';target.querySelectorAll("[data-customer]").forEach(b=>b.onclick=()=>{const c=j.items[Number(b.dataset.customer)];if(selectable)selectCustomer(c);else showCustomer(c)})}catch(e){toast(e.message,true)}}
 function selectCustomer(c){$("selectedCustomerId").value=c.customer_id;$("pcCustomerName").value=c.full_name||"";$("pcCustomerPhone").value=c.phone||"";const p=(c.passengers||[])[0];if(p){$("selectedPassengerId").value=p.id;$("pcPassengerName").value=p.full_name||"";$("pcMobility").value=p.mobility_type||"walking";$("pcPickupName").value=p.default_pickup_place||"";$("pcPickupAddress").value=p.address||""}$("phoneSearchResults").innerHTML='<div class="alert">既存顧客を選択しました。</div>'}function showCustomer(c){$("customerResults").innerHTML=`<div class="box"><h3>${esc(c.full_name)}</h3><dl class="kv"><dt>顧客番号</dt><dd>${esc(c.customer_no)}</dd><dt>電話</dt><dd>${esc(c.phone||"-")}</dd><dt>最終利用</dt><dd>${esc(dt(c.last_used_at))}</dd><dt>利用者</dt><dd>${esc((c.passengers||[]).map(p=>p.full_name).join("、")||"-")}</dd><dt>内部メモ</dt><dd>${esc(c.internal_notes||"-")}</dd></dl></div>`}
 $("phoneSearchBtn").onclick=()=>search($("phoneSearch").value,$("phoneSearchResults"),true);$("customerSearchBtn").onclick=()=>search($("customerQuery").value,$("customerResults"),false);

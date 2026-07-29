@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light">
-<meta name="theme-color" content="#075d61"><title>DPRO介護タクシー｜スタッフ運行</title>
+<meta name="theme-color" content="#075d61"><title>DPRO介護タクシー｜公開操作デモ・スタッフ運行</title>
 <script src="config.js"></script>
 <style>
 :root{--main:#08676a;--deep:#064b50;--bg:#edf4f5;--card:#fff;--line:#c7dadd;--muted:#61787d;--danger:#b93732;--warn:#a96700;--ok:#176b45;--blue:#2469aa;--shadow:0 8px 25px rgba(20,68,74,.12)}
@@ -24,10 +24,77 @@ button:disabled,input:disabled,select:disabled,textarea:disabled{cursor:not-allo
 @media(max-width:650px){.date-control{min-width:0;width:100%;font-size:14px;padding-left:10px;padding-right:38px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
+
+/* DPRO-SYSTEMS-5 CARETAXI OPERATION DEMO */
+.operation-demo-banner{
+  width:min(1080px,calc(100% - 28px));
+  margin:16px auto 0;
+  padding:16px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  border:1px solid #b9d9d6;
+  border-radius:17px;
+  background:linear-gradient(135deg,#f7fcfb,#e7f5f4);
+  box-shadow:0 12px 30px rgba(15,92,98,.08);
+}
+.operation-demo-banner>div{display:flex;flex-direction:column}
+.operation-demo-banner small{
+  color:var(--primary,#0f5c62);
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.14em;
+}
+.operation-demo-banner strong{font-size:17px;line-height:1.4}
+.operation-demo-banner span{margin-top:3px;color:var(--muted,#5a6b74);font-size:12px;font-weight:700}
+.operation-demo-banner a,
+.official-demo-link{
+  flex:0 0 auto;
+  min-height:42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 14px;
+  border-radius:999px;
+  color:#fff!important;
+  background:var(--primary,#0f5c62);
+  text-decoration:none!important;
+  font-size:12px;
+  font-weight:900;
+  box-shadow:0 9px 22px rgba(15,92,98,.18);
+}
+.operation-demo-banner.compact{
+  width:min(1100px,calc(100% - 44px));
+  margin-top:14px;
+}
+.login-card .official-demo-link{
+  width:100%;
+  margin-top:10px;
+  background:#fff;
+  color:var(--primary-dark,var(--deep,#084b50))!important;
+  border:1px solid #b9d6d4;
+  box-shadow:none;
+}
+.top .official-demo-link{
+  min-height:42px;
+  padding:7px 12px;
+  border:1px solid rgba(255,255,255,.5);
+  background:rgba(255,255,255,.11);
+  box-shadow:none;
+}
+@media(max-width:720px){
+  .operation-demo-banner{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .operation-demo-banner a{width:100%}
+  .operation-demo-banner.compact{width:min(100% - 24px,1100px)}
+}
 </style>
-</head><body>
-<div id="loginView" class="login"><form id="loginForm" class="login-card"><small>DPRO CARE TAXI</small><h1>スタッフ当日運行</h1><p>担当する送迎だけを表示し、電話・地図・運行状況をスマートフォンから操作します。</p><div id="loginError" class="error hidden" role="alert"></div><div class="field"><label>デモスタッフを選ぶ</label><div class="quick"><button type="button" data-demo="DEMO-STAFF-001">佐藤 運転</button><button type="button" data-demo="DEMO-STAFF-002">鈴木 介助</button></div></div><div class="field"><label for="staffCode">スタッフコード</label><input id="staffCode" autocomplete="username" placeholder="例：DEMO-STAFF-001" required></div><div class="field"><label for="accessCode">スタッフ用コード</label><div class="code"><input id="accessCode" type="password" inputmode="numeric" autocomplete="current-password" placeholder="デモ：1234" required><button id="clearCode" type="button" aria-label="コードを消す">×</button></div></div><button class="btn btn-main" type="submit">本日の担当を開く</button></form></div>
-<div id="appView" class="hidden"><header class="top"><div class="topin"><div class="brand"><small>DPRO CARE TAXI</small><h1 id="staffTitle">スタッフ運行</h1></div><div class="topactions"><span id="envPill" class="pill">デモ</span><button id="reloadBtn" type="button">更新</button><button id="logoutBtn" type="button">終了</button></div></div></header><main class="shell"><section class="datebar"><button id="prevDate" type="button">← 前日</button><label class="date-control"><span id="dateDisplay" class="date-display">日付を選択</span><input id="targetDate" type="date" aria-label="表示日を選択"></label><button id="nextDate" type="button">翌日 →</button></section><section id="summary" class="summary"></section><div class="section-title"><h2>担当する送迎</h2><span id="listNote"></span></div><section id="tripList" class="list"></section></main></div>
+</head><body class="operation-demo-page">
+<div id="loginView" class="login"><form id="loginForm" class="login-card"><small>DPRO CARE TAXI / OPERATION DEMO</small><h1>スタッフ当日運行 操作デモ</h1><p>担当する送迎だけを表示し、電話・地図・運行状況をスマートフォンから操作します。</p><div id="loginError" class="error hidden" role="alert"></div><div class="field"><label>デモスタッフを選ぶ</label><div class="quick"><button type="button" data-demo="DEMO-STAFF-001">佐藤 運転</button><button type="button" data-demo="DEMO-STAFF-002">鈴木 介助</button></div></div><div class="field"><label for="staffCode">スタッフコード</label><input id="staffCode" autocomplete="username" placeholder="例：DEMO-STAFF-001" required></div><div class="field"><label for="accessCode">スタッフ用コード</label><div class="code"><input id="accessCode" type="password" inputmode="numeric" autocomplete="current-password" placeholder="デモ：1234" required><button id="clearCode" type="button" aria-label="コードを消す">×</button></div></div><button class="btn btn-main" type="submit">本日の担当を開く</button><a class="official-demo-link" href="https://dpro-shop.com/systems/caretaxi">公式の機能説明を見る</a></form></div>
+<div id="appView" class="hidden"><header class="top"><div class="topin"><div class="brand"><small>DPRO CARE TAXI</small><h1 id="staffTitle">スタッフ運行</h1></div><div class="topactions"><span id="envPill" class="pill">公開デモ</span><a class="official-demo-link" href="https://dpro-shop.com/systems/caretaxi">公式説明</a><button id="reloadBtn" type="button">更新</button><button id="logoutBtn" type="button">終了</button></div></div></header><main class="shell"><section class="datebar"><button id="prevDate" type="button">← 前日</button><label class="date-control"><span id="dateDisplay" class="date-display">日付を選択</span><input id="targetDate" type="date" aria-label="表示日を選択"></label><button id="nextDate" type="button">翌日 →</button></section><section id="summary" class="summary"></section><div class="section-title"><h2>担当する送迎</h2><span id="listNote"></span></div><section id="tripList" class="list"></section></main></div>
 <div id="detail" class="detail" role="dialog" aria-modal="true" aria-labelledby="detailTitle" aria-hidden="true"><div class="backdrop" data-close="1"></div><aside class="sheet"><div class="sheethead"><h2 id="detailTitle">送迎詳細</h2><button class="close" aria-label="閉じる" data-close="1" type="button">×</button></div><div id="detailBody" class="sheetbody"></div></aside></div><div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 <script>
 (()=>{"use strict";const C=window.CARETAXI_CONFIG||{},API=String(C.API_BASE_URL||"").replace(/\/+$/,"");const ORG=C.ORGANIZATION_CODE||"dpro_caretaxi_demo",KEY=C.STAFF_SESSION_KEY||"dpro_caretaxi_staff_session_v1",BUSINESS_PHONE=C.BUSINESS_PHONE||"";const $=id=>document.getElementById(id);let session=null,data={trips:[],counts:{}},current=null;

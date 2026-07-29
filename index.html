@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#0f5c62">
   <meta name="format-detection" content="telephone=no">
-  <title>DPRO 介護タクシー｜送迎依頼</title>
+  <title>DPRO 介護タクシー｜公開操作デモ・送迎依頼</title>
   <script src="./config.js"></script>
   <style>
     :root {
@@ -146,29 +146,104 @@ button:disabled,input:disabled,select:disabled,textarea:disabled{cursor:not-allo
 @media(max-width:650px){.date-control{min-width:0;width:100%;font-size:14px;padding-left:10px;padding-right:38px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
+
+/* DPRO-SYSTEMS-5 CARETAXI OPERATION DEMO */
+.operation-demo-banner{
+  width:min(1080px,calc(100% - 28px));
+  margin:16px auto 0;
+  padding:16px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  border:1px solid #b9d9d6;
+  border-radius:17px;
+  background:linear-gradient(135deg,#f7fcfb,#e7f5f4);
+  box-shadow:0 12px 30px rgba(15,92,98,.08);
+}
+.operation-demo-banner>div{display:flex;flex-direction:column}
+.operation-demo-banner small{
+  color:var(--primary,#0f5c62);
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.14em;
+}
+.operation-demo-banner strong{font-size:17px;line-height:1.4}
+.operation-demo-banner span{margin-top:3px;color:var(--muted,#5a6b74);font-size:12px;font-weight:700}
+.operation-demo-banner a,
+.official-demo-link{
+  flex:0 0 auto;
+  min-height:42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 14px;
+  border-radius:999px;
+  color:#fff!important;
+  background:var(--primary,#0f5c62);
+  text-decoration:none!important;
+  font-size:12px;
+  font-weight:900;
+  box-shadow:0 9px 22px rgba(15,92,98,.18);
+}
+.operation-demo-banner.compact{
+  width:min(1100px,calc(100% - 44px));
+  margin-top:14px;
+}
+.login-card .official-demo-link{
+  width:100%;
+  margin-top:10px;
+  background:#fff;
+  color:var(--primary-dark,var(--deep,#084b50))!important;
+  border:1px solid #b9d6d4;
+  box-shadow:none;
+}
+.top .official-demo-link{
+  min-height:42px;
+  padding:7px 12px;
+  border:1px solid rgba(255,255,255,.5);
+  background:rgba(255,255,255,.11);
+  box-shadow:none;
+}
+@media(max-width:720px){
+  .operation-demo-banner{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .operation-demo-banner a{width:100%}
+  .operation-demo-banner.compact{width:min(100% - 24px,1100px)}
+}
 </style>
 </head>
-<body>
+<body class="operation-demo-page">
 <div class="app">
   <header class="hero">
     <div class="hero-inner">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">＋</div>
-        <div><p class="eyebrow">DPRO CARE TAXI</p><h1 id="organizationName">介護タクシー送迎依頼</h1></div>
+        <div><p class="eyebrow">DPRO CARE TAXI / OPERATION DEMO</p><h1 id="organizationName">介護タクシー送迎依頼 操作デモ</h1></div>
       </div>
       <p class="hero-copy">通院・退院・転院・外出などの送迎を依頼できます。4つの画面を順番に入力し、最後に内容を確認して送信します。</p>
       <div class="status-row">
         <span class="status-pill" id="connectionStatus">接続確認中</span>
         <span class="status-pill">希望時間は30分単位</span>
         <span class="status-pill">送信だけでは予約確定ではありません</span>
-        <a class="status-pill" href="./member.html">予約履歴・ご利用者情報</a>
+        <a class="status-pill" href="./member.html">予約履歴・ご利用者情報</a><a class="status-pill" href="https://dpro-shop.com/systems/caretaxi">公式の機能説明を見る</a>
       </div>
     </div>
   </header>
+<section class="operation-demo-banner" aria-label="公開操作デモの案内">
+  <div>
+    <small>OPERATION DEMO</small>
+    <strong>これは介護タクシー送迎依頼の公開操作デモです</strong>
+    <span>機能・料金を読む公式紹介ページとは別の、実際の入力画面です。実在する個人情報は入力しないでください。</span>
+  </div>
+  <a href="https://dpro-shop.com/systems/caretaxi">公式の機能説明を見る</a>
+</section>
 
   <main class="main">
     <div id="globalNotice" class="notice info" role="status" aria-live="polite">事業所情報を読み込んでいます。</div>
-    <div id="demoNotice" class="notice warn hidden">現在は営業デモ環境です。入力した内容はデモデータとして保存されます。</div>
+    <div id="demoNotice" class="notice warn hidden">現在は公開操作デモ環境です。入力内容は架空データとして保存されます。実在する個人情報は入力しないでください。</div>
 
     <nav class="step-nav" aria-label="入力手順">
       <button type="button" class="step-chip is-current" data-step-target="1"><span>1</span>予約者</button>

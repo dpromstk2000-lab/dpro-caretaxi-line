@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#0b5f63">
-  <title>DPRO 介護タクシー｜会員・家族ポータル</title>
+  <title>DPRO 介護タクシー｜公開操作デモ・会員家族ポータル</title>
   <script src="./config.js"></script>
   <style>
     :root{--brand:#0b5f63;--brand-dark:#084b50;--brand-soft:#e6f4f3;--navy:#18384b;--bg:#eef5f6;--card:#fff;--text:#17323d;--muted:#667b84;--line:#cfdee2;--success:#137a4b;--warning:#a55d08;--danger:#b42318;--shadow:0 12px 34px rgba(20,58,70,.10);--radius:18px}
@@ -34,15 +34,87 @@ button:disabled,input:disabled,select:disabled,textarea:disabled{cursor:not-allo
 @media(max-width:650px){.date-control{min-width:0;width:100%;font-size:14px;padding-left:10px;padding-right:38px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
+
+/* DPRO-SYSTEMS-5 CARETAXI OPERATION DEMO */
+.operation-demo-banner{
+  width:min(1080px,calc(100% - 28px));
+  margin:16px auto 0;
+  padding:16px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  border:1px solid #b9d9d6;
+  border-radius:17px;
+  background:linear-gradient(135deg,#f7fcfb,#e7f5f4);
+  box-shadow:0 12px 30px rgba(15,92,98,.08);
+}
+.operation-demo-banner>div{display:flex;flex-direction:column}
+.operation-demo-banner small{
+  color:var(--primary,#0f5c62);
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.14em;
+}
+.operation-demo-banner strong{font-size:17px;line-height:1.4}
+.operation-demo-banner span{margin-top:3px;color:var(--muted,#5a6b74);font-size:12px;font-weight:700}
+.operation-demo-banner a,
+.official-demo-link{
+  flex:0 0 auto;
+  min-height:42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 14px;
+  border-radius:999px;
+  color:#fff!important;
+  background:var(--primary,#0f5c62);
+  text-decoration:none!important;
+  font-size:12px;
+  font-weight:900;
+  box-shadow:0 9px 22px rgba(15,92,98,.18);
+}
+.operation-demo-banner.compact{
+  width:min(1100px,calc(100% - 44px));
+  margin-top:14px;
+}
+.login-card .official-demo-link{
+  width:100%;
+  margin-top:10px;
+  background:#fff;
+  color:var(--primary-dark,var(--deep,#084b50))!important;
+  border:1px solid #b9d6d4;
+  box-shadow:none;
+}
+.top .official-demo-link{
+  min-height:42px;
+  padding:7px 12px;
+  border:1px solid rgba(255,255,255,.5);
+  background:rgba(255,255,255,.11);
+  box-shadow:none;
+}
+@media(max-width:720px){
+  .operation-demo-banner{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .operation-demo-banner a{width:100%}
+  .operation-demo-banner.compact{width:min(100% - 24px,1100px)}
+}
 </style>
 </head>
-<body>
+<body class="operation-demo-page">
 <header class="hero">
   <div class="hero-inner">
-    <div class="brand"><div class="mark">＋</div><div><p class="eyebrow">DPRO CARE TAXI</p><h1 id="pageTitle">会員・家族ポータル</h1><p>ご利用者情報・送迎履歴・帰りのお迎え連絡</p></div></div>
-    <div class="hero-actions"><a class="hero-link" href="./index.html">＋ 新しい送迎依頼</a><button class="hero-link" id="refreshButton" type="button">↻ 最新情報</button></div>
+    <div class="brand"><div class="mark">＋</div><div><p class="eyebrow">DPRO CARE TAXI / OPERATION DEMO</p><h1 id="pageTitle">会員・家族ポータル 操作デモ</h1><p>ご利用者情報・送迎履歴・帰りのお迎え連絡</p></div></div>
+    <div class="hero-actions"><a class="hero-link" href="./index.html">＋ 新しい送迎依頼</a><button class="hero-link" id="refreshButton" type="button">↻ 最新情報</button><a class="hero-link" href="https://dpro-shop.com/systems/caretaxi">公式の機能説明を見る</a></div>
   </div>
 </header>
+<div class="operation-demo-banner compact" aria-label="公開操作デモの案内">
+  <strong>公開操作デモ</strong>
+  <span>架空データで会員・家族ポータルを体験する画面です。</span>
+  <a href="https://dpro-shop.com/systems/caretaxi">公式の機能説明を見る</a>
+</div>
 <main>
   <div id="notice" class="notice info" role="status" aria-live="polite">事業所へ接続しています。</div>
   <div id="loading" class="loading"><span class="spinner"></span>&nbsp;会員情報を読み込んでいます</div>

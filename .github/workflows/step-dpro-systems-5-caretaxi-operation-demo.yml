@@ -1,0 +1,282 @@
+name: STEP DPRO-SYSTEMS-5 Care Taxi Operation Demo
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/step-dpro-systems-5-caretaxi-operation-demo.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clarify care taxi operation demo
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64
+
+          index_banner = base64.b64decode("PHNlY3Rpb24gY2xhc3M9Im9wZXJhdGlvbi1kZW1vLWJhbm5lciIgYXJpYS1sYWJlbD0i5YWs6ZaL5pON5L2c44OH44Oi44Gu5qGI5YaFIj4KICA8ZGl2PgogICAgPHNtYWxsPk9QRVJBVElPTiBERU1PPC9zbWFsbD4KICAgIDxzdHJvbmc+44GT44KM44Gv5LuL6K2344K/44Kv44K344O86YCB6L+O5L6d6aC844Gu5YWs6ZaL5pON5L2c44OH44Oi44Gn44GZPC9zdHJvbmc+CiAgICA8c3Bhbj7mqZ/og73jg7vmlpnph5HjgpLoqq3jgoDlhazlvI/ntLnku4vjg5rjg7zjgrjjgajjga/liKXjga7jgIHlrp/pmpvjga7lhaXlipvnlLvpnaLjgafjgZnjgILlrp/lnKjjgZnjgovlgIvkurrmg4XloLHjga/lhaXlipvjgZfjgarjgYTjgafjgY/jgaDjgZXjgYTjgII8L3NwYW4+CiAgPC9kaXY+CiAgPGEgaHJlZj0iaHR0cHM6Ly9kcHJvLXNob3AuY29tL3N5c3RlbXMvY2FyZXRheGkiPuWFrOW8j+OBruapn+iDveiqrOaYjuOCkuimi+OCizwvYT4KPC9zZWN0aW9uPg==").decode("utf-8")
+          member_banner = base64.b64decode("PGRpdiBjbGFzcz0ib3BlcmF0aW9uLWRlbW8tYmFubmVyIGNvbXBhY3QiIGFyaWEtbGFiZWw9IuWFrOmWi+aTjeS9nOODh+ODouOBruahiOWGhSI+CiAgPHN0cm9uZz7lhazplovmk43kvZzjg4fjg6I8L3N0cm9uZz4KICA8c3Bhbj7mnrbnqbrjg4fjg7zjgr/jgafkvJrlk6Hjg7vlrrbml4/jg53jg7zjgr/jg6vjgpLkvZPpqJPjgZnjgovnlLvpnaLjgafjgZnjgII8L3NwYW4+CiAgPGEgaHJlZj0iaHR0cHM6Ly9kcHJvLXNob3AuY29tL3N5c3RlbXMvY2FyZXRheGkiPuWFrOW8j+OBruapn+iDveiqrOaYjuOCkuimi+OCizwvYT4KPC9kaXY+").decode("utf-8")
+          common_css = base64.b64decode("Ci8qIERQUk8tU1lTVEVNUy01IENBUkVUQVhJIE9QRVJBVElPTiBERU1PICovCi5vcGVyYXRpb24tZGVtby1iYW5uZXJ7CiAgd2lkdGg6bWluKDEwODBweCxjYWxjKDEwMCUgLSAyOHB4KSk7CiAgbWFyZ2luOjE2cHggYXV0byAwOwogIHBhZGRpbmc6MTZweCAxOHB4OwogIGRpc3BsYXk6ZmxleDsKICBhbGlnbi1pdGVtczpjZW50ZXI7CiAganVzdGlmeS1jb250ZW50OnNwYWNlLWJldHdlZW47CiAgZ2FwOjIwcHg7CiAgYm9yZGVyOjFweCBzb2xpZCAjYjlkOWQ2OwogIGJvcmRlci1yYWRpdXM6MTdweDsKICBiYWNrZ3JvdW5kOmxpbmVhci1ncmFkaWVudCgxMzVkZWcsI2Y3ZmNmYiwjZTdmNWY0KTsKICBib3gtc2hhZG93OjAgMTJweCAzMHB4IHJnYmEoMTUsOTIsOTgsLjA4KTsKfQoub3BlcmF0aW9uLWRlbW8tYmFubmVyPmRpdntkaXNwbGF5OmZsZXg7ZmxleC1kaXJlY3Rpb246Y29sdW1ufQoub3BlcmF0aW9uLWRlbW8tYmFubmVyIHNtYWxsewogIGNvbG9yOnZhcigtLXByaW1hcnksIzBmNWM2Mik7CiAgZm9udC1zaXplOjEwcHg7CiAgZm9udC13ZWlnaHQ6MTAwMDsKICBsZXR0ZXItc3BhY2luZzouMTRlbTsKfQoub3BlcmF0aW9uLWRlbW8tYmFubmVyIHN0cm9uZ3tmb250LXNpemU6MTdweDtsaW5lLWhlaWdodDoxLjR9Ci5vcGVyYXRpb24tZGVtby1iYW5uZXIgc3BhbnttYXJnaW4tdG9wOjNweDtjb2xvcjp2YXIoLS1tdXRlZCwjNWE2Yjc0KTtmb250LXNpemU6MTJweDtmb250LXdlaWdodDo3MDB9Ci5vcGVyYXRpb24tZGVtby1iYW5uZXIgYSwKLm9mZmljaWFsLWRlbW8tbGlua3sKICBmbGV4OjAgMCBhdXRvOwogIG1pbi1oZWlnaHQ6NDJweDsKICBkaXNwbGF5OmlubGluZS1mbGV4OwogIGFsaWduLWl0ZW1zOmNlbnRlcjsKICBqdXN0aWZ5LWNvbnRlbnQ6Y2VudGVyOwogIHBhZGRpbmc6OHB4IDE0cHg7CiAgYm9yZGVyLXJhZGl1czo5OTlweDsKICBjb2xvcjojZmZmIWltcG9ydGFudDsKICBiYWNrZ3JvdW5kOnZhcigtLXByaW1hcnksIzBmNWM2Mik7CiAgdGV4dC1kZWNvcmF0aW9uOm5vbmUhaW1wb3J0YW50OwogIGZvbnQtc2l6ZToxMnB4OwogIGZvbnQtd2VpZ2h0OjkwMDsKICBib3gtc2hhZG93OjAgOXB4IDIycHggcmdiYSgxNSw5Miw5OCwuMTgpOwp9Ci5vcGVyYXRpb24tZGVtby1iYW5uZXIuY29tcGFjdHsKICB3aWR0aDptaW4oMTEwMHB4LGNhbGMoMTAwJSAtIDQ0cHgpKTsKICBtYXJnaW4tdG9wOjE0cHg7Cn0KLmxvZ2luLWNhcmQgLm9mZmljaWFsLWRlbW8tbGlua3sKICB3aWR0aDoxMDAlOwogIG1hcmdpbi10b3A6MTBweDsKICBiYWNrZ3JvdW5kOiNmZmY7CiAgY29sb3I6dmFyKC0tcHJpbWFyeS1kYXJrLHZhcigtLWRlZXAsIzA4NGI1MCkpIWltcG9ydGFudDsKICBib3JkZXI6MXB4IHNvbGlkICNiOWQ2ZDQ7CiAgYm94LXNoYWRvdzpub25lOwp9Ci50b3AgLm9mZmljaWFsLWRlbW8tbGlua3sKICBtaW4taGVpZ2h0OjQycHg7CiAgcGFkZGluZzo3cHggMTJweDsKICBib3JkZXI6MXB4IHNvbGlkIHJnYmEoMjU1LDI1NSwyNTUsLjUpOwogIGJhY2tncm91bmQ6cmdiYSgyNTUsMjU1LDI1NSwuMTEpOwogIGJveC1zaGFkb3c6bm9uZTsKfQpAbWVkaWEobWF4LXdpZHRoOjcyMHB4KXsKICAub3BlcmF0aW9uLWRlbW8tYmFubmVyewogICAgYWxpZ24taXRlbXM6ZmxleC1zdGFydDsKICAgIGZsZXgtZGlyZWN0aW9uOmNvbHVtbjsKICB9CiAgLm9wZXJhdGlvbi1kZW1vLWJhbm5lciBhe3dpZHRoOjEwMCV9CiAgLm9wZXJhdGlvbi1kZW1vLWJhbm5lci5jb21wYWN0e3dpZHRoOm1pbigxMDAlIC0gMjRweCwxMTAwcHgpfQp9Cg==").decode("utf-8")
+          marker = "/* DPRO-SYSTEMS-5 CARETAXI OPERATION DEMO */"
+
+          def read(name):
+              return Path(name).read_text(encoding="utf-8")
+
+          def write(name, value):
+              Path(name).write_text(value, encoding="utf-8")
+
+          def replace_once(text, old, new, label):
+              if new in text:
+                  return text
+              if old not in text:
+                  raise SystemExit("ERROR: " + label + " target not found")
+              return text.replace(old, new, 1)
+
+          def add_style(text):
+              if marker in text:
+                  return text
+              if "</style>" not in text:
+                  raise SystemExit("ERROR: style closing tag not found")
+              return text.replace(
+                  "</style>",
+                  "\n" + common_css.strip() + "\n</style>",
+                  1
+              )
+
+          # 1. 利用者・家族の送迎依頼
+          index = read("index.html")
+          index = replace_once(
+              index,
+              "<title>DPRO 介護タクシー｜送迎依頼</title>",
+              "<title>DPRO 介護タクシー｜公開操作デモ・送迎依頼</title>",
+              "request title"
+          )
+          index = replace_once(
+              index,
+              "<body>",
+              '<body class="operation-demo-page">',
+              "request body"
+          )
+          index = replace_once(
+              index,
+              '<div><p class="eyebrow">DPRO CARE TAXI</p><h1 id="organizationName">介護タクシー送迎依頼</h1></div>',
+              '<div><p class="eyebrow">DPRO CARE TAXI / OPERATION DEMO</p><h1 id="organizationName">介護タクシー送迎依頼 操作デモ</h1></div>',
+              "request hero"
+          )
+          index = replace_once(
+              index,
+              '<a class="status-pill" href="./member.html">予約履歴・ご利用者情報</a>',
+              '<a class="status-pill" href="./member.html">予約履歴・ご利用者情報</a><a class="status-pill" href="https://dpro-shop.com/systems/caretaxi">公式の機能説明を見る</a>',
+              "request official link"
+          )
+          if "これは介護タクシー送迎依頼の公開操作デモです" not in index:
+              index = replace_once(
+                  index,
+                  "</header>\n\n  <main",
+                  "</header>\n" + index_banner + "\n\n  <main",
+                  "request demo banner"
+              )
+          index = replace_once(
+              index,
+              '<div id="demoNotice" class="notice warn hidden">現在は営業デモ環境です。入力した内容はデモデータとして保存されます。</div>',
+              '<div id="demoNotice" class="notice warn hidden">現在は公開操作デモ環境です。入力内容は架空データとして保存されます。実在する個人情報は入力しないでください。</div>',
+              "request demo notice"
+          )
+          index = add_style(index)
+          write("index.html", index)
+
+          # 2. 会員・家族ポータル
+          member = read("member.html")
+          member = replace_once(
+              member,
+              "<title>DPRO 介護タクシー｜会員・家族ポータル</title>",
+              "<title>DPRO 介護タクシー｜公開操作デモ・会員家族ポータル</title>",
+              "member title"
+          )
+          member = replace_once(
+              member,
+              "<body>",
+              '<body class="operation-demo-page">',
+              "member body"
+          )
+          member = replace_once(
+              member,
+              '<p class="eyebrow">DPRO CARE TAXI</p><h1 id="pageTitle">会員・家族ポータル</h1>',
+              '<p class="eyebrow">DPRO CARE TAXI / OPERATION DEMO</p><h1 id="pageTitle">会員・家族ポータル 操作デモ</h1>',
+              "member hero"
+          )
+          member = replace_once(
+              member,
+              '<div class="hero-actions"><a class="hero-link" href="./index.html">＋ 新しい送迎依頼</a><button class="hero-link" id="refreshButton" type="button">↻ 最新情報</button></div>',
+              '<div class="hero-actions"><a class="hero-link" href="./index.html">＋ 新しい送迎依頼</a><button class="hero-link" id="refreshButton" type="button">↻ 最新情報</button><a class="hero-link" href="https://dpro-shop.com/systems/caretaxi">公式の機能説明を見る</a></div>',
+              "member official link"
+          )
+          if "架空データで会員・家族ポータルを体験する画面です" not in member:
+              member = replace_once(
+                  member,
+                  "</header>\n<main>",
+                  "</header>\n" + member_banner + "\n<main>",
+                  "member demo banner"
+              )
+          member = add_style(member)
+          write("member.html", member)
+
+          # 3. 管理者PC
+          owner = read("owner.html")
+          owner = replace_once(
+              owner,
+              "<title>DPRO介護タクシー｜管理者PC</title>",
+              "<title>DPRO介護タクシー｜公開操作デモ・管理者PC</title>",
+              "owner title"
+          )
+          owner = replace_once(
+              owner,
+              "<body>",
+              '<body class="operation-demo-page">',
+              "owner body"
+          )
+          owner = replace_once(
+              owner,
+              '<div class="muted"><b>DPRO CARE TAXI</b></div><h1>管理者PC</h1>',
+              '<div class="muted"><b>DPRO CARE TAXI / OPERATION DEMO</b></div><h1>管理者PC 操作デモ</h1>',
+              "owner login title"
+          )
+          owner = replace_once(
+              owner,
+              '<button class="btn-primary" type="submit">管理画面を開く</button><p class="muted">本番環境では管理コード1234を使用できません。</p>',
+              '<button class="btn-primary" type="submit">管理画面を開く</button><a class="official-demo-link" href="https://dpro-shop.com/systems/caretaxi">公式の機能説明を見る</a><p class="muted">公開デモは架空情報を使用します。実在する個人情報は入力しないでください。</p>',
+              "owner login official link"
+          )
+          owner = replace_once(
+              owner,
+              '<button id="systemCheckOpen">システム検査</button>',
+              '<a class="official-demo-link" href="https://dpro-shop.com/systems/caretaxi">公式説明</a>',
+              "owner remove system check button"
+          )
+          owner = replace_once(
+              owner,
+              '<main class="shell"><div id="demoAlert" class="alert">営業デモ環境です。表示される氏名・住所・予約は架空情報です。</div>',
+              '<main class="shell"><div id="demoAlert" class="alert">公開操作デモです。表示される氏名・住所・予約はすべて架空情報です。</div>',
+              "owner demo alert"
+          )
+          owner = replace_once(
+              owner,
+              '$("systemCheckOpen").onclick=()=>location.href="./system-check.html";$("ledgerOpen").onclick=()=>location.href="./ledger.html";',
+              '$("ledgerOpen").onclick=()=>location.href="./ledger.html";',
+              "owner remove system check script"
+          )
+          owner = add_style(owner)
+          write("owner.html", owner)
+
+          # 4. iPad配車
+          ipad = read("owner-ipad.html")
+          ipad = replace_once(
+              ipad,
+              "<title>DPRO介護タクシー｜iPad配車</title>",
+              "<title>DPRO介護タクシー｜公開操作デモ・iPad配車</title>",
+              "ipad title"
+          )
+          ipad = replace_once(
+              ipad,
+              "<body>",
+              '<body class="operation-demo-page">',
+              "ipad body"
+          )
+          ipad = replace_once(
+              ipad,
+              '<small><b>DPRO CARE TAXI</b></small>\n    <h1>iPad配車画面</h1>',
+              '<small><b>DPRO CARE TAXI / OPERATION DEMO</b></small>\n    <h1>iPad配車画面 操作デモ</h1>',
+              "ipad login title"
+          )
+          ipad = replace_once(
+              ipad,
+              '<button class="btn btn-primary" type="submit">配車画面を開く</button>',
+              '<button class="btn btn-primary" type="submit">配車画面を開く</button><a class="official-demo-link" href="https://dpro-shop.com/systems/caretaxi">公式の機能説明を見る</a>',
+              "ipad login official link"
+          )
+          ipad = replace_once(
+              ipad,
+              '<span id="envPill" class="pill">デモ環境</span>\n        <button id="reloadBtn" type="button">最新情報</button>',
+              '<span id="envPill" class="pill">公開デモ</span>\n        <a class="official-demo-link" href="https://dpro-shop.com/systems/caretaxi">公式説明</a>\n        <button id="reloadBtn" type="button">最新情報</button>',
+              "ipad header official link"
+          )
+          ipad = add_style(ipad)
+          write("owner-ipad.html", ipad)
+
+          # 5. スタッフ当日運行
+          staff = read("staff.html")
+          staff = replace_once(
+              staff,
+              "<title>DPRO介護タクシー｜スタッフ運行</title>",
+              "<title>DPRO介護タクシー｜公開操作デモ・スタッフ運行</title>",
+              "staff title"
+          )
+          staff = replace_once(
+              staff,
+              "</head><body>",
+              '</head><body class="operation-demo-page">',
+              "staff body"
+          )
+          staff = replace_once(
+              staff,
+              '<small>DPRO CARE TAXI</small><h1>スタッフ当日運行</h1>',
+              '<small>DPRO CARE TAXI / OPERATION DEMO</small><h1>スタッフ当日運行 操作デモ</h1>',
+              "staff login title"
+          )
+          staff = replace_once(
+              staff,
+              '<button class="btn btn-main" type="submit">本日の担当を開く</button></form>',
+              '<button class="btn btn-main" type="submit">本日の担当を開く</button><a class="official-demo-link" href="https://dpro-shop.com/systems/caretaxi">公式の機能説明を見る</a></form>',
+              "staff login official link"
+          )
+          staff = replace_once(
+              staff,
+              '<div class="topactions"><span id="envPill" class="pill">デモ</span><button id="reloadBtn" type="button">更新</button>',
+              '<div class="topactions"><span id="envPill" class="pill">公開デモ</span><a class="official-demo-link" href="https://dpro-shop.com/systems/caretaxi">公式説明</a><button id="reloadBtn" type="button">更新</button>',
+              "staff header official link"
+          )
+          staff = add_style(staff)
+          write("staff.html", staff)
+
+          # 自動検査
+          checks = {
+              "index.html": read("index.html"),
+              "member.html": read("member.html"),
+              "owner.html": read("owner.html"),
+              "owner-ipad.html": read("owner-ipad.html"),
+              "staff.html": read("staff.html")
+          }
+
+          for filename, content in checks.items():
+              assert "OPERATION DEMO" in content, filename
+              assert "https://dpro-shop.com/systems/caretaxi" in content, filename
+              assert marker in content, filename
+
+          assert "公開操作デモ" in checks["index.html"]
+          assert "会員・家族ポータル 操作デモ" in checks["member.html"]
+          assert "管理者PC 操作デモ" in checks["owner.html"]
+          assert "システム検査" not in checks["owner.html"]
+          assert "systemCheckOpen" not in checks["owner.html"]
+          assert "system-check.html" not in checks["owner.html"]
+          assert "iPad配車画面 操作デモ" in checks["owner-ipad.html"]
+          assert "スタッフ当日運行 操作デモ" in checks["staff.html"]
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "dpro-systems-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html member.html owner.html owner-ipad.html staff.html
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+            exit 0
+          fi
+          git commit -m "STEP DPRO-SYSTEMS-5 clarify care taxi operation demo"
+          git push

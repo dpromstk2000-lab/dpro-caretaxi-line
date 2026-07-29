@@ -1,4 +1,4 @@
-name: STEP DPRO-SYSTEMS-5 Care Taxi Operation Demo
+name: STEP DPRO-SYSTEMS-5 Care Taxi Operation Demo R2
 
 on:
   workflow_dispatch:
@@ -33,11 +33,11 @@ jobs:
               Path(name).write_text(value, encoding="utf-8")
 
           def replace_once(text, old, new, label):
+              if old in text:
+                  return text.replace(old, new, 1)
               if new in text:
                   return text
-              if old not in text:
-                  raise SystemExit("ERROR: " + label + " target not found")
-              return text.replace(old, new, 1)
+              raise SystemExit("ERROR: " + label + " target not found")
 
           def add_style(text):
               if marker in text:
@@ -168,8 +168,8 @@ jobs:
           )
           owner = replace_once(
               owner,
-              '$("systemCheckOpen").onclick=()=>location.href="./system-check.html";$("ledgerOpen").onclick=()=>location.href="./ledger.html";',
-              '$("ledgerOpen").onclick=()=>location.href="./ledger.html";',
+              '$("systemCheckOpen").onclick=()=>location.href="./system-check.html";',
+              '',
               "owner remove system check script"
           )
           owner = add_style(owner)
@@ -278,5 +278,5 @@ jobs:
             echo "No changes needed"
             exit 0
           fi
-          git commit -m "STEP DPRO-SYSTEMS-5 clarify care taxi operation demo"
+          git commit -m "STEP DPRO-SYSTEMS-5-R2 clarify care taxi operation demo"
           git push

@@ -1,0 +1,248 @@
+<!doctype html>
+<!-- DPRO LIVE DEMO COMMON TEMPLATE V1.0 LOCK / CONFIGURABLE TEMPLATE -->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title id="pageTitle">DPRO 公開操作デモ・画面一覧</title>
+<style>
+:root{
+  --bg:#eef5f5;--card:#fff;--ink:#17383c;--muted:#61777b;--line:#c9dcdf;
+  --brand:#08676a;--deep:#064b50;--brand2:#4f9c9d;--soft:#eef8f8;
+  --shadow:0 16px 46px rgba(44,37,32,.10)
+}
+*{box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;line-height:1.65;background:linear-gradient(180deg,#fff 0%,var(--bg) 100%)}
+a{color:inherit}.page{width:min(1140px,calc(100% - 24px));margin:0 auto;padding:20px 0 48px}
+.hero{position:relative;overflow:hidden;padding:34px;border-radius:28px;color:#fff;background:linear-gradient(135deg,var(--deep),var(--brand) 63%,var(--brand2));box-shadow:0 23px 58px rgba(35,30,27,.20)}
+.hero:after{content:"";position:absolute;right:-95px;bottom:-150px;width:290px;height:290px;border-radius:50%;background:rgba(255,255,255,.07)}
+.kicker{position:relative;z-index:1;font-size:11px;font-weight:1000;letter-spacing:.14em;opacity:.9}
+.hero h1{position:relative;z-index:1;margin:10px 0 0;font-size:clamp(28px,5vw,49px);line-height:1.24}
+.hero p{position:relative;z-index:1;max-width:830px;margin:13px 0 0;font-size:14px;opacity:.93}
+.hero-actions{position:relative;z-index:1;display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+.button{min-height:45px;display:inline-flex;align-items:center;justify-content:center;padding:9px 15px;border-radius:999px;text-decoration:none;font-size:12px;font-weight:950}
+.button-light{color:var(--deep);background:#fff}.button-ghost{color:#fff;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.09)}
+.notice{margin-top:15px;padding:15px 17px;border:1px solid #e5cda3;border-radius:15px;background:#fff5e5;color:#725013;font-size:12px;font-weight:760}
+.demo-info{margin-top:16px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.demo-info>div{padding:14px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.96);box-shadow:var(--shadow)}
+.demo-info small{display:block;color:var(--brand);font-size:9px;font-weight:1000;letter-spacing:.08em}.demo-info strong{display:block;margin-top:4px;font-size:14px}
+.section-head{margin:32px 0 15px}.section-head small{color:var(--brand);font-size:10px;font-weight:1000;letter-spacing:.12em}.section-head h2{margin:5px 0 0;font-size:clamp(23px,4vw,34px)}.section-head p{max-width:840px;margin:7px 0 0;color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.card{min-width:0;padding:20px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.98);box-shadow:var(--shadow)}
+.card-number{color:var(--brand);font-size:10px;font-weight:1000;letter-spacing:.1em}.card h3{margin:7px 0 0;font-size:21px;line-height:1.4}.card p{margin:8px 0 0;color:var(--muted);font-size:12px}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.pills span{padding:5px 8px;border-radius:999px;background:var(--soft);color:var(--deep);font-size:9px;font-weight:900}
+.card-note{margin-top:13px;padding:11px;border-radius:12px;background:var(--soft);color:#675a54;font-size:11px}.card-note b{color:var(--deep)}
+.card-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:15px}
+.open,.official{min-height:44px;display:flex;align-items:center;justify-content:center;padding:9px 13px;border-radius:12px;text-decoration:none;font-size:10px;font-weight:950}
+.open{color:#fff;background:linear-gradient(135deg,var(--deep),var(--brand2))}.official{color:var(--deep);border:1px solid var(--line);background:var(--soft)}
+.flow{margin-top:14px;padding:19px;border:1px solid var(--line);border-radius:19px;background:#fff;box-shadow:var(--shadow)}
+.flow-grid{display:grid;grid-template-columns:repeat(var(--flow-cols,5),minmax(0,1fr));gap:8px}
+.flow-step{padding:12px;border-radius:12px;background:var(--soft)}.flow-step b{display:block;color:var(--brand);font-size:10px}.flow-step strong{display:block;margin-top:4px;font-size:11px}.flow-step.same{border:1px dashed #cdbfb6}
+.footer{margin-top:26px;color:#82736c;font-size:10px;text-align:center}
+@media(max-width:900px){.flow-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.hero{padding:25px 20px}.demo-info,.grid,.flow-grid{grid-template-columns:1fr}}
+@media(max-width:420px){.page{width:min(100% - 16px,1140px)}.card-actions{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="page">
+<section class="hero">
+  <div class="kicker">PUBLIC OPERATION DEMO / V1.0</div>
+  <h1 id="heroTitle"></h1>
+  <p id="heroCopy"></p>
+  <div class="hero-actions">
+    <a class="button button-light" id="officialLink">公式の機能・料金説明を見る</a>
+    <a class="button button-ghost" id="primaryDemoLink">まず体験する</a>
+  </div>
+</section>
+
+<div class="notice" id="notice"></div>
+
+<section class="demo-info" id="quickInfo" aria-label="デモ利用情報"></section>
+
+<div class="section-head">
+  <small>CHOOSE A SCREEN</small>
+  <h2>確認する画面を選択</h2>
+  <p id="screenIntro"></p>
+</div>
+
+<section class="grid" id="screenGrid"></section>
+
+<div class="section-head">
+  <small>RECOMMENDED JOURNEY</small>
+  <h2>おすすめの確認順</h2>
+  <p id="journeyIntro"></p>
+</div>
+<section class="flow"><div class="flow-grid" id="flowGrid"></div></section>
+
+<div class="footer" id="footer"></div>
+</main>
+
+<script>
+/*
+  DPRO LIVE DEMO COMMON TEMPLATE V1.0
+  ------------------------------------------------------------
+  変更してよいのは CONFIG の値とCSS変数のブランド色のみ。
+  DOM骨格・セクション順・公開注意・CHOOSE A SCREEN・
+  RECOMMENDED JOURNEYはCOMMON TEMPLATE V1.0 LOCK対象。
+*/
+const CONFIG = {
+  "systemName": "DPRO 介護タクシー LINE",
+  "pageTitle": "DPRO 介護タクシー LINE｜公開操作デモ・画面一覧",
+  "heroCopy": "利用者・ご家族の送迎依頼から、見積・予約確定、配車、当日運行、料金・送迎履歴までを、1件の送迎案件としてつなげて確認できます。",
+  "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/systems/caretaxi.html",
+  "primaryDemoUrl": "https://dpromstk2000-lab.github.io/dpro-caretaxi-line/index.html",
+  "notice": "公開デモでは実在する氏名・電話番号・住所・医療情報・介助情報を入力せず、必ず架空の内容を使用してください。送迎依頼の送信だけでは予約確定になりません。",
+  "screenIntro": "DEMO 01の送迎依頼から始め、同じ送迎案件が管理・配車・料金・履歴へつながる流れを順番に確認します。",
+  "journeyIntro": "「依頼内容・介助条件・配車・料金が別々になる」課題を、1送迎案件でつなぐ流れとして確認できます。",
+  "adminCode": "1234",
+  "quickInfo": [
+    {
+      "label": "CUSTOMER FLOW",
+      "text": "送迎依頼 → 見積/確定 → 配車/運行 → 料金/履歴"
+    },
+    {
+      "label": "DEMO INFO",
+      "text": "管理系画面のデモ管理コード：1234"
+    },
+    {
+      "label": "SCREEN STRUCTURE",
+      "text": "5つの実画面で1送迎案件の全体像を確認"
+    }
+  ],
+  "screens": [
+    {
+      "step": "DEMO 01 / PRIMARY EXPERIENCE",
+      "title": "利用者・家族｜送迎依頼",
+      "description": "予約者・乗車者、介助条件、乗車地・目的地、希望日時を4ステップで入力し、送迎依頼を送信する入口です。",
+      "tags": [
+        "30分単位",
+        "乗車者・介助",
+        "送迎区間"
+      ],
+      "note": "<b>最初にここ。</b> 架空情報で操作してください。依頼送信時点では予約確定ではありません。",
+      "url": "https://dpromstk2000-lab.github.io/dpro-caretaxi-line/index.html",
+      "cta": "送迎依頼を開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/systems/caretaxi.html"
+    },
+    {
+      "step": "DEMO 02 / OWNER PC",
+      "title": "管理者PC｜見積・予約確定",
+      "description": "電話受付を含む送迎予約を一覧化し、受付→確認中→見積送付→利用者確認→予約確定の流れを管理します。",
+      "tags": [
+        "電話受付",
+        "見積",
+        "予約確定"
+      ],
+      "note": "<b>管理コード 1234。</b> DEMO 01で入った依頼が、事業者側でどう確認・確定されるかを見る画面です。",
+      "url": "https://dpromstk2000-lab.github.io/dpro-caretaxi-line/owner.html?demo=1",
+      "cta": "管理者PCを開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/systems/caretaxi.html"
+    },
+    {
+      "step": "DEMO 03 / DISPATCH IPAD",
+      "title": "管理iPad｜配車・当日運行",
+      "description": "受付済みの送迎を配車し、出発準備・出発・お迎え到着・乗車・目的地到着・完了まで当日の状態をタッチ操作で確認します。",
+      "tags": [
+        "配車",
+        "当日運行",
+        "状態共有"
+      ],
+      "note": "<b>管理コード 1234。</b> 当日の運行状況を一覧と予約詳細で確認します。",
+      "url": "https://dpromstk2000-lab.github.io/dpro-caretaxi-line/owner-ipad.html?demo=1",
+      "cta": "配車iPadを開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/systems/caretaxi.html"
+    },
+    {
+      "step": "DEMO 04 / BILLING",
+      "title": "料金・支払管理｜見積内訳と確定料金",
+      "description": "送迎予約ごとに見積内訳、確定料金、入金状況を確認し、未払い・一部入金・支払済みを整理します。",
+      "tags": [
+        "料金明細",
+        "確定料金",
+        "支払状況"
+      ],
+      "note": "<b>管理コード 1234。</b> 営業デモ環境のため実際の請求・決済は行われません。",
+      "url": "https://dpromstk2000-lab.github.io/dpro-caretaxi-line/billing.html?demo=1",
+      "cta": "料金管理を開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/systems/caretaxi.html"
+    },
+    {
+      "step": "DEMO 05 / LEDGER & HISTORY",
+      "title": "顧客・乗車者台帳｜送迎履歴",
+      "description": "予約者・乗車者・家族関係・よく行く場所・利用履歴を台帳で確認し、次回の受付に再利用できます。",
+      "tags": [
+        "顧客台帳",
+        "乗車者台帳",
+        "利用履歴"
+      ],
+      "note": "<b>管理コード 1234。</b> 実在する利用者情報は入力しないでください。",
+      "url": "https://dpromstk2000-lab.github.io/dpro-caretaxi-line/ledger.html?demo=1",
+      "cta": "台帳・履歴を開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/systems/caretaxi.html"
+    }
+  ],
+  "journey": [
+    {
+      "step": "01",
+      "text": "利用者・家族が送迎依頼"
+    },
+    {
+      "step": "02",
+      "text": "管理者が見積・予約確定"
+    },
+    {
+      "step": "03",
+      "text": "iPadで配車・当日運行"
+    },
+    {
+      "step": "04",
+      "text": "料金・支払状況を確認"
+    },
+    {
+      "step": "05",
+      "text": "台帳・送迎履歴へ残す"
+    }
+  ]
+};
+
+document.documentElement.style.setProperty("--flow-cols", String(Math.min(CONFIG.journey.length, 7)));
+document.title = CONFIG.pageTitle;
+document.getElementById("heroTitle").innerHTML = `${CONFIG.systemName}<br>公開操作デモ・画面一覧`;
+document.getElementById("heroCopy").textContent = CONFIG.heroCopy;
+document.getElementById("officialLink").href = CONFIG.officialUrl;
+document.getElementById("primaryDemoLink").href = CONFIG.primaryDemoUrl;
+document.getElementById("notice").textContent = CONFIG.notice;
+document.getElementById("screenIntro").textContent = CONFIG.screenIntro;
+document.getElementById("journeyIntro").textContent = CONFIG.journeyIntro;
+document.getElementById("footer").textContent = `${CONFIG.systemName}｜PUBLIC OPERATION DEMO V1.0`;
+
+document.getElementById("quickInfo").innerHTML = CONFIG.quickInfo.map(x =>
+  `<div><small>${x.label}</small><strong>${x.text}</strong></div>`
+).join("");
+
+document.getElementById("screenGrid").innerHTML = CONFIG.screens.map(x => `
+  <article class="card">
+    <div class="card-number">${x.step}</div>
+    <h3>${x.title}</h3>
+    <p>${x.description}</p>
+    <div class="pills">${x.tags.map(t => `<span>${t}</span>`).join("")}</div>
+    <div class="card-note">${x.note}</div>
+    <div class="card-actions">
+      <a class="open" href="${x.url}">${x.cta}</a>
+      <a class="official" href="${x.officialUrl}">説明</a>
+    </div>
+  </article>
+`).join("");
+
+document.getElementById("flowGrid").innerHTML = CONFIG.journey.map(x => `
+  <div class="flow-step${x.sameScreen ? " same" : ""}">
+    <b>${x.step}${x.sameScreen ? " / SAME SCREEN" : ""}</b>
+    <strong>${x.text}</strong>
+  </div>
+`).join("");
+</script>
+</body>
+</html>

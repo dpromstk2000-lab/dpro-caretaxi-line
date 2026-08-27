@@ -1,0 +1,22 @@
+DPRO TUTORIAL BATCH-03 CARETAXI
+R5 QA
+Date: 2026-08-27
+
+PASS Quick Start PDF exists/opens
+PASS Detailed Manual PDF exists/opens
+PASS Quick Start PNG preview exists
+PASS Detailed Manual PNG preview exists
+PASS A4 portrait
+PASS actual live/demo screenshots used
+PASS Guide Center URL current
+PASS First10 start/resume/replay current via Guide Center
+PASS QR decode exact match: https://dpromstk2000-lab.github.io/dpro-caretaxi-line/guide-center.html
+PASS QR decode exact match: https://dpromstk2000-lab.github.io/dpro-caretaxi-line/demo-guide.html
+PASS PDF rendered fresh for QA
+PASS Japanese text render source uses Japanese CID font
+PASS safety warnings included
+PASS R3/R4 regression anchors preserved
+PASS businessMutation = 0
+PASS DB/Worker/API/Auth/Role/Permission/Feature Flag Tutorial changes = 0
+
+OVERALL PASS

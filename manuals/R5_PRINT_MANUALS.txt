@@ -1,0 +1,19 @@
+DPRO TUTORIAL BATCH-03 CARETAXI
+R5 PRINT MANUALS
+Date: 2026-08-27
+
+OUTPUT
+- DPRO_TUTORIAL_CARETAXI_QUICK_START_V1.0.pdf
+- DPRO_TUTORIAL_CARETAXI_DETAILED_MANUAL_V1.0.pdf
+- DPRO_TUTORIAL_CARETAXI_QUICK_START_V1.0.png
+- DPRO_TUTORIAL_CARETAXI_DETAILED_MANUAL_V1.0.png
+
+SOURCE
+- industry main: 874f8dfb090665a83b40723f67f7383fa14bf8d1
+- Guide Center: https://dpromstk2000-lab.github.io/dpro-caretaxi-line/guide-center.html
+- actual live/demo screenshots captured by Playwright
+
+SAFETY
+- Tutorial business mutation = 0
+- no DB/Worker/API/Auth/Role/Permission/Feature Flag changes
+- no customer secrets

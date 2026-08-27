@@ -1,0 +1,125 @@
+name: CARETAXI Tutorial R4 Guide Center QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'guide-center.html'
+      - 'tutorial.js'
+      - '.github/workflows/caretaxi-tutorial-r4-guide-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guide-center-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+
+      - name: Static R4 mutation and structure audit
+        shell: bash
+        run: |
+          node --check tutorial.js
+          python - <<'PY'
+          from pathlib import Path
+          h=Path('guide-center.html').read_text(encoding='utf-8')
+          j=Path('tutorial.js').read_text(encoding='utf-8')
+          checks={
+            'r4_marker':'CARETAXI-R4-GUIDE-CENTER-V1.0-20260827' in h,
+            'guide_entry':'./guide-center.html' in j,
+            'first10_resume':'id="first10Resume"' in h,
+            'first10_replay':'id="first10Replay"' in h,
+            'system_check':'./system-check.html' in h,
+            'persona_requester':'id="requester"' in h,
+            'persona_owner':'id="owner"' in h,
+            'persona_day':'id="day"' in h,
+            'persona_money':'id="money"' in h,
+            'troubleshooting':'id="trouble"' in h,
+            'no_fetch':'fetch(' not in h,
+            'no_xhr':'XMLHttpRequest' not in h,
+            'no_business_api':'API_BASE_URL' not in h,
+            'focus_visible':':focus-visible' in h,
+            'mobile_390':'@media(max-width:390px)' in h,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          print(checks)
+          if bad: raise SystemExit('R4 static audit failed: '+','.join(bad))
+          PY
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright
+          npx playwright install --with-deps chromium
+
+      - name: Wait for GitHub Pages R4 assets
+        shell: bash
+        run: |
+          node <<'JS'
+          const url='https://dpromstk2000-lab.github.io/dpro-caretaxi-line/guide-center.html';
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms)); let ok=false;
+          for(let i=0;i<50;i++){
+            try{const t=await fetch(url+'?wait='+Date.now(),{cache:'no-store'}).then(r=>r.text());if(t.includes('CARETAXI-R4-GUIDE-CENTER-V1.0-20260827')){ok=true;break}}catch{}
+            await sleep(6000);
+          }
+          if(!ok) throw new Error('GitHub Pages did not expose R4 Guide Center marker');
+          JS
+
+      - name: Run fresh browser R4 QA
+        shell: bash
+        run: |
+          cat > caretaxi-tutorial-r4-qa.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          const BASE='https://dpromstk2000-lab.github.io/dpro-caretaxi-line/';
+          const STATE='dpro_caretaxi_tutorial_first10_v1';
+          const out='CARETAXI_TUTORIAL_R4_QA';fs.mkdirSync(out,{recursive:true});
+          const results=[];const add=(name,pass,detail={})=>results.push({name,pass,...detail});
+          const browser=await chromium.launch({headless:true});
+          async function context(w,h){return browser.newContext({viewport:{width:w,height:h},locale:'ja-JP',timezoneId:'Asia/Tokyo',colorScheme:'light'});}
+          for(const [label,w,h] of [['desktop',1440,900],['ipad',1024,900],['mobile390',390,844]]){
+            const c=await context(w,h),p=await c.newPage(),ce=[],pe=[];p.on('console',m=>{if(m.type()==='error')ce.push(m.text())});p.on('pageerror',e=>pe.push(String(e)));
+            const r=await p.goto(BASE+'guide-center.html?qa='+Date.now(),{waitUntil:'domcontentloaded',timeout:45000});await p.waitForTimeout(250);
+            const m=await p.evaluate(()=>({cw:document.documentElement.clientWidth,sw:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth),resume:!!document.querySelector('#first10Resume'),replay:!!document.querySelector('#first10Replay'),search:!!document.querySelector('#guideSearch')}));
+            add(label,(r?.status()||0)<400&&m.sw===m.cw&&m.resume&&m.replay&&m.search&&ce.length===0&&pe.length===0,{status:r?.status(),metrics:m,consoleErrors:ce,pageErrors:pe});await c.close();
+          }
+          {
+            const c=await context(1024,800),p=await c.newPage();await p.goto(BASE+'index.html?guide-entry='+Date.now(),{waitUntil:'domcontentloaded'});await p.locator('#dpro-tutorial-launcher').waitFor({timeout:15000});await p.locator('#dpro-tutorial-launcher').click();const link=p.locator('#dpro-tutorial-menu a[href="./guide-center.html"]');add('guide_entry',await link.count()===1);await c.close();
+          }
+          {
+            const c=await context(1024,800),p=await c.newPage();await p.goto(BASE+'guide-center.html?launch='+Date.now(),{waitUntil:'domcontentloaded'});await p.locator('#first10Resume').click();await p.waitForURL(/demo-guide\.html/, {timeout:15000});await p.locator('#dpro-tutorial-card[data-open="1"]').waitFor();const s=await p.evaluate(k=>JSON.parse(localStorage.getItem(k)),STATE);add('first10_launch',s?.currentStep===1&&s?.status==='active',{state:s,url:p.url()});await c.close();
+          }
+          {
+            const c=await context(1024,800),p=await c.newPage();await p.addInitScript(k=>localStorage.setItem(k,JSON.stringify({tutorialId:'CARETAXI_FIRST10_V1',version:1,currentStep:9,status:'paused',completedSteps:[1,2,3,4,5,6,7,8],skippedSteps:[],updatedAt:Date.now()})),STATE);await p.goto(BASE+'guide-center.html?resume='+Date.now(),{waitUntil:'domcontentloaded'});await p.locator('#first10Resume').click();await p.waitForURL(/billing\.html/, {timeout:15000});await p.locator('#dpro-tutorial-card[data-open="1"]').waitFor();const s=await p.evaluate(k=>JSON.parse(localStorage.getItem(k)),STATE);add('first10_resume',s?.currentStep===9&&s?.status==='active',{state:s,url:p.url()});await c.close();
+          }
+          {
+            const c=await context(1024,800),p=await c.newPage();await p.addInitScript(k=>localStorage.setItem(k,JSON.stringify({tutorialId:'CARETAXI_FIRST10_V1',version:1,currentStep:7,status:'paused',completedSteps:[1,2,3,4,5,6],skippedSteps:[],updatedAt:Date.now()})),STATE);await p.goto(BASE+'guide-center.html?replay='+Date.now(),{waitUntil:'domcontentloaded'});await p.locator('#first10Replay').click();await p.waitForURL(/demo-guide\.html/, {timeout:15000});const s=await p.evaluate(k=>JSON.parse(localStorage.getItem(k)),STATE);add('first10_replay',s?.currentStep===1&&s?.status==='active',{state:s,url:p.url()});await c.close();
+          }
+          {
+            const c=await context(390,844),p=await c.newPage();await p.goto(BASE+'guide-center.html?kbd='+Date.now(),{waitUntil:'domcontentloaded'});let found=false,outline='';for(let i=0;i<8;i++){await p.keyboard.press('Tab');const x=await p.evaluate(()=>({id:document.activeElement?.id||'',outline:getComputedStyle(document.activeElement).outlineStyle}));if(x.id==='first10Resume'){found=true;outline=x.outline;break}}add('keyboard_focus',found&&outline!=='none',{found,outline});await c.close();
+          }
+          {
+            const c=await context(1024,800),p=await c.newPage();await p.goto(BASE+'guide-center.html?links='+Date.now(),{waitUntil:'domcontentloaded'});const hrefs=await p.locator('a[href]').evaluateAll(as=>[...new Set(as.map(a=>a.getAttribute('href')).filter(h=>h&&h.startsWith('./')))]);const broken=[];for(const href of hrefs){const u=new URL(href,BASE);const r=await p.request.get(u.href);if(r.status()>=400)broken.push({href,status:r.status()})}add('guide_links',broken.length===0,{hrefs,broken});await c.close();
+          }
+          await browser.close();
+          const ok=results.every(r=>r.pass);const report={ok,systemCode:'CARETAXI',phase:'R4',version:'V1.0',checkedAt:new Date().toISOString(),businessMutation:0,results};fs.writeFileSync(`${out}/R4_QA.json`,JSON.stringify(report,null,2));fs.writeFileSync(`${out}/R4_QA.txt`,results.map(r=>`${r.pass?'PASS':'FAIL'} ${r.name}`).join('\n')+`\nOVERALL ${ok?'PASS':'FAIL'}\nBUSINESS_MUTATION 0\n`);console.log(fs.readFileSync(`${out}/R4_QA.txt`,'utf8'));if(!ok)process.exitCode=1;
+          JS
+          node caretaxi-tutorial-r4-qa.mjs
+
+      - name: Upload R4 QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: caretaxi-tutorial-r4-qa
+          path: CARETAXI_TUTORIAL_R4_QA/
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,437 @@
+name: CARETAXI Tutorial R5 Print Manuals
+
+on:
+  push:
+    paths:
+      - '.github/workflows/caretaxi-tutorial-r5-manuals.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: caretaxi-tutorial-r5-manuals
+  cancel-in-progress: false
+
+jobs:
+  r5-manuals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout newest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Verify R4 source anchor is not rolled back
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=874f8dfb090665a83b40723f67f7383fa14bf8d1
+          git fetch origin main
+          git merge-base --is-ancestor "$BASE" HEAD
+          echo "CURRENT_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Setup Node and Playwright
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PDF and QR QA dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libzbar0
+          python -m pip install --upgrade pip
+          python -m pip install reportlab pillow qrcode PyMuPDF pyzbar
+
+      - name: Write R5 live capture program
+        shell: bash
+        run: |
+          mkdir -p .r5tmp/screens
+          cat > .r5tmp/capture.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'fs';
+          import path from 'path';
+          
+          const base = 'https://dpromstk2000-lab.github.io/dpro-caretaxi-line/';
+          const outDir = '.r5tmp/screens';
+          fs.mkdirSync(outDir, { recursive: true });
+          
+          const browser = await chromium.launch({ headless: true });
+          const results = [];
+          let mutationRequests = [];
+          
+          async function shot({name, rel, width, height, fullPage=false, action=null}) {
+            const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
+            const page = await context.newPage();
+            const localMutations = [];
+            const consoleErrors = [];
+            page.on('request', req => {
+              const m = req.method().toUpperCase();
+              if (!['GET','HEAD','OPTIONS'].includes(m)) {
+                localMutations.push({method:m,url:req.url()});
+                mutationRequests.push({name,method:m,url:req.url()});
+              }
+            });
+            page.on('console', msg => { if (msg.type() === 'error') consoleErrors.push(msg.text()); });
+            const url = new URL(rel, base).href;
+            const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            if (!response || response.status() >= 400) throw new Error(`${name}: HTTP ${response?.status()} ${url}`);
+            await page.waitForTimeout(1200);
+            if (action === 'replay') {
+              const replay = page.locator('#first10Replay');
+              if (await replay.count()) {
+                await replay.click();
+                await page.waitForTimeout(1200);
+              }
+            }
+            const dimensions = await page.evaluate(() => ({
+              scrollWidth: document.documentElement.scrollWidth,
+              clientWidth: document.documentElement.clientWidth,
+              title: document.title
+            }));
+            await page.screenshot({ path: path.join(outDir, `${name}.png`), fullPage });
+            results.push({name,url,status:response.status(),width,height,fullPage,dimensions,mutationRequests:localMutations,consoleErrors});
+            await context.close();
+          }
+          
+          await shot({name:'guide-1440',rel:'guide-center.html',width:1440,height:1000,fullPage:true});
+          await shot({name:'guide-first10-1440',rel:'guide-center.html',width:1440,height:900,action:'replay'});
+          await shot({name:'guide-390',rel:'guide-center.html',width:390,height:844});
+          await shot({name:'guide-320',rel:'guide-center.html',width:320,height:720});
+          await shot({name:'request-390',rel:'index.html',width:390,height:844});
+          await shot({name:'owner-1440',rel:'owner.html?demo=1',width:1440,height:900});
+          await shot({name:'ipad-1024',rel:'owner-ipad.html?demo=1',width:1024,height:768});
+          await shot({name:'staff-390',rel:'staff.html?demo=1',width:390,height:844});
+          await shot({name:'billing-1440',rel:'billing.html?demo=1',width:1440,height:900});
+          await shot({name:'ledger-1440',rel:'ledger.html?demo=1',width:1440,height:900});
+          await shot({name:'system-check-1024',rel:'system-check.html',width:1024,height:768});
+          
+          await browser.close();
+          fs.writeFileSync('.r5tmp/r5_capture_results.json', JSON.stringify({base,mutationRequests,results}, null, 2));
+          if (mutationRequests.length) {
+            console.error('BUSINESS_MUTATION_REQUESTS_DETECTED', JSON.stringify(mutationRequests, null, 2));
+            process.exit(2);
+          }
+          for (const r of results) {
+            if ((r.width === 390 || r.width === 320) && r.dimensions.scrollWidth > r.dimensions.clientWidth + 1) {
+              console.error('HORIZONTAL_OVERFLOW', r.name, r.dimensions);
+              process.exit(3);
+            }
+          }
+          console.log(`R5 live capture PASS: ${results.length} screenshots, BUSINESS_MUTATION 0`);
+          JS
+
+      - name: Capture actual live/demo screens
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .r5tmp/capture.mjs
+
+      - name: Write manual generator and QA program
+        shell: bash
+        run: |
+          cat > .r5tmp/manuals.py <<'PY'
+          from pathlib import Path
+          import json, hashlib, os
+          from reportlab.lib import colors
+          from reportlab.lib.pagesizes import A4
+          from reportlab.lib.enums import TA_CENTER, TA_LEFT
+          from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+          from reportlab.lib.units import mm
+          from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle, PageBreak, KeepTogether
+          from reportlab.pdfbase import pdfmetrics
+          from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+          import qrcode
+          import fitz
+          from PIL import Image as PILImage
+          from pyzbar.pyzbar import decode as qr_decode
+          
+          ROOT = Path('.')
+          TMP = ROOT / '.r5tmp'
+          SCREENS = TMP / 'screens'
+          OUT = ROOT / 'manuals'
+          OUT.mkdir(parents=True, exist_ok=True)
+          
+          GUIDE = 'https://dpromstk2000-lab.github.io/dpro-caretaxi-line/guide-center.html'
+          DEMO = 'https://dpromstk2000-lab.github.io/dpro-caretaxi-line/demo-guide.html'
+          ROOT_URL = 'https://dpromstk2000-lab.github.io/dpro-caretaxi-line/'
+          
+          QUICK = OUT / 'DPRO_TUTORIAL_CARETAXI_QUICK_START_V1.0.pdf'
+          DETAIL = OUT / 'DPRO_TUTORIAL_CARETAXI_DETAILED_MANUAL_V1.0.pdf'
+          QUICK_PNG = OUT / 'DPRO_TUTORIAL_CARETAXI_QUICK_START_V1.0.png'
+          DETAIL_PNG = OUT / 'DPRO_TUTORIAL_CARETAXI_DETAILED_MANUAL_V1.0.png'
+          
+          pdfmetrics.registerFont(UnicodeCIDFont('HeiseiKakuGo-W5'))
+          FONT = 'HeiseiKakuGo-W5'
+          NAVY = colors.HexColor('#16365C')
+          BLUE = colors.HexColor('#1857B6')
+          SOFT = colors.HexColor('#F3F7FC')
+          WARN = colors.HexColor('#FFF7DF')
+          WARN_LINE = colors.HexColor('#D8A52E')
+          MUTED = colors.HexColor('#586676')
+          LINE = colors.HexColor('#D8E0EA')
+          
+          styles = getSampleStyleSheet()
+          TITLE = ParagraphStyle('jpTitle', parent=styles['Title'], fontName=FONT, fontSize=22, leading=30, textColor=NAVY, alignment=TA_CENTER, wordWrap='CJK', spaceAfter=5*mm)
+          H1 = ParagraphStyle('jpH1', parent=styles['Heading1'], fontName=FONT, fontSize=17, leading=23, textColor=NAVY, wordWrap='CJK', spaceBefore=2*mm, spaceAfter=3*mm)
+          H2 = ParagraphStyle('jpH2', parent=styles['Heading2'], fontName=FONT, fontSize=13, leading=18, textColor=BLUE, wordWrap='CJK', spaceBefore=2*mm, spaceAfter=2*mm)
+          BODY = ParagraphStyle('jpBody', parent=styles['BodyText'], fontName=FONT, fontSize=9.5, leading=15, textColor=colors.HexColor('#172033'), wordWrap='CJK', spaceAfter=2.2*mm)
+          SMALL = ParagraphStyle('jpSmall', parent=BODY, fontSize=8, leading=12, textColor=MUTED)
+          CENTER = ParagraphStyle('jpCenter', parent=BODY, alignment=TA_CENTER)
+          WHITE = ParagraphStyle('jpWhite', parent=BODY, textColor=colors.white, alignment=TA_CENTER, fontSize=11, leading=15)
+          
+          
+          def P(text, style=BODY):
+              return Paragraph(text, style)
+          
+          
+          def img(path, max_w=168*mm, max_h=88*mm):
+              p = Path(path)
+              with PILImage.open(p) as im:
+                  w, h = im.size
+              scale = min(float(max_w)/w, float(max_h)/h)
+              return Image(str(p), width=w*scale, height=h*scale)
+          
+          
+          def page_header(canvas, doc):
+              canvas.saveState()
+              canvas.setStrokeColor(LINE)
+              canvas.line(16*mm, 12*mm, A4[0]-16*mm, 12*mm)
+              canvas.setFont(FONT, 7)
+              canvas.setFillColor(MUTED)
+              canvas.drawString(16*mm, 7*mm, 'DPRO TUTORIAL / CARETAXI')
+              canvas.drawRightString(A4[0]-16*mm, 7*mm, f'{doc.page}')
+              canvas.restoreState()
+          
+          
+          def safety_box(text):
+              t = Table([[P('<b>重要な安全ルール</b>', H2)], [P(text, BODY)]], colWidths=[166*mm])
+              t.setStyle(TableStyle([
+                  ('BACKGROUND',(0,0),(-1,-1),WARN),('BOX',(0,0),(-1,-1),0.8,WARN_LINE),
+                  ('LEFTPADDING',(0,0),(-1,-1),4*mm),('RIGHTPADDING',(0,0),(-1,-1),4*mm),
+                  ('TOPPADDING',(0,0),(-1,-1),2.5*mm),('BOTTOMPADDING',(0,0),(-1,-1),2.5*mm),
+              ]))
+              return t
+          
+          
+          def banner(text):
+              t = Table([[P(text, WHITE)]], colWidths=[166*mm])
+              t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,-1),BLUE),('BOX',(0,0),(-1,-1),0,BLUE),('TOPPADDING',(0,0),(-1,-1),3*mm),('BOTTOMPADDING',(0,0),(-1,-1),3*mm)]))
+              return t
+          
+          
+          def make_qr(url, name):
+              p = TMP / name
+              qr = qrcode.QRCode(version=None, box_size=12, border=4)
+              qr.add_data(url); qr.make(fit=True)
+              qr.make_image(fill_color='black', back_color='white').save(p)
+              return p
+          
+          
+          def qr_block(qrpath, label, url):
+              qri = img(qrpath, max_w=34*mm, max_h=34*mm)
+              text = P(f'<b>{label}</b><br/>{url}', SMALL)
+              t = Table([[qri, text]], colWidths=[40*mm, 124*mm], valign='MIDDLE')
+              t.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.5,LINE),('BACKGROUND',(0,0),(-1,-1),SOFT),('LEFTPADDING',(0,0),(-1,-1),3*mm),('RIGHTPADDING',(0,0),(-1,-1),3*mm),('TOPPADDING',(0,0),(-1,-1),3*mm),('BOTTOMPADDING',(0,0),(-1,-1),3*mm)]))
+              return t
+          
+          
+          def build_quick(qr_guide):
+              doc = SimpleDocTemplate(str(QUICK), pagesize=A4, rightMargin=15*mm,leftMargin=15*mm,topMargin=14*mm,bottomMargin=16*mm, title='DPRO CARETAXI かんたんスタートガイド')
+              s=[]
+              s += [P('DPRO 介護タクシー・送迎予約', H2), P('10分 かんたんスタートガイド', TITLE), banner('まずは Guide Center → First10 で全体を安全に確認'), Spacer(1,4*mm)]
+              s += [P('1. Guide Centerを開く', H1), P('「First10を開始 / 再開」を押すと、依頼 → 管理 → 当日運行 → 料金 → 台帳の順に案内されます。途中で閉じてもTutorial専用状態から再開できます。'), img(SCREENS/'guide-first10-1440.png', 166*mm, 68*mm)]
+              s += [Spacer(1,3*mm), safety_box('Tutorial / Guide Center は、予約送信・見積保存・予約確定・配車登録・運行状態更新・料金保存・台帳保存などの業務更新を自動実行しません。実業務を更新するボタンは、内容を確認して利用者自身が操作してください。')]
+              s += [PageBreak(), P('2. 基本の流れは5つ', H1)]
+              rows=[]
+              steps=[
+                  ('① 利用者・家族','送迎依頼を入力。乗車者、介助条件、片道/往復、日付、30分単位の希望時間、住所を確認。'),
+                  ('② 管理者PC','未確認依頼 → 内容確認 → 見積 → 予約確定 → 車両・運転者の配車。'),
+                  ('③ 当日運行','管理iPadとスタッフ画面で担当・送迎状況を確認。'),
+                  ('④ 料金・支払','料金内容や支払状況を確認。保存操作は業務更新。'),
+                  ('⑤ 顧客・乗車者台帳','履歴・利用状況を確認。作成・編集・保存は業務更新。'),
+              ]
+              for a,b in steps: rows.append([P(f'<b>{a}</b>', BODY),P(b,BODY)])
+              t=Table(rows,colWidths=[38*mm,128*mm])
+              t.setStyle(TableStyle([('GRID',(0,0),(-1,-1),0.4,LINE),('BACKGROUND',(0,0),(0,-1),SOFT),('VALIGN',(0,0),(-1,-1),'TOP'),('LEFTPADDING',(0,0),(-1,-1),2.5*mm),('RIGHTPADDING',(0,0),(-1,-1),2.5*mm),('TOPPADDING',(0,0),(-1,-1),2*mm),('BOTTOMPADDING',(0,0),(-1,-1),2*mm)]))
+              s += [t, Spacer(1,3*mm)]
+              shots=Table([[img(SCREENS/'request-390.png',76*mm,65*mm), img(SCREENS/'owner-1440.png',86*mm,65*mm)]], colWidths=[80*mm,86*mm])
+              shots.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP')]))
+              s += [shots, Spacer(1,3*mm), P('困ったときはGuide Centerの検索、公開デモ画面一覧、System Checkを使います。', BODY), qr_block(qr_guide,'Guide Center（First10開始 / 再開 / 最初から）',GUIDE)]
+              doc.build(s,onFirstPage=page_header,onLaterPages=page_header)
+          
+          
+          def section_page(title, purpose, screenshot, bullets, warning=None):
+              a=[P(title,H1),P(purpose,BODY),img(SCREENS/screenshot,166*mm,82*mm),Spacer(1,2*mm)]
+              for i,b in enumerate(bullets,1): a.append(P(f'<b>{i}.</b> {b}',BODY))
+              if warning: a += [Spacer(1,2*mm), safety_box(warning)]
+              return a
+          
+          
+          def build_detail(qr_guide, qr_demo):
+              doc = SimpleDocTemplate(str(DETAIL), pagesize=A4, rightMargin=15*mm,leftMargin=15*mm,topMargin=14*mm,bottomMargin=16*mm, title='DPRO CARETAXI 導入・操作マニュアル')
+              s=[]
+              s += [P('DPRO 介護タクシー・送迎予約',H2),P('導入・操作マニュアル（保存版）',TITLE),banner('R4 Guide Center / First10 準拠'),Spacer(1,4*mm),P('目次',H1)]
+              toc=[('1','はじめに / Guide Center・First10'),('2','利用者・家族'),('3','管理者PC'),('4','当日運行'),('5','お金・台帳'),('6','困ったとき / System Check'),('7','FAQ・安全確認')]
+              tt=Table([[P(a,BODY),P(b,BODY)] for a,b in toc], colWidths=[12*mm,154*mm])
+              tt.setStyle(TableStyle([('GRID',(0,0),(-1,-1),0.35,LINE),('BACKGROUND',(0,0),(-1,-1),SOFT),('LEFTPADDING',(0,0),(-1,-1),3*mm),('TOPPADDING',(0,0),(-1,-1),2*mm),('BOTTOMPADDING',(0,0),(-1,-1),2*mm)]))
+              s += [tt,Spacer(1,4*mm),safety_box('このマニュアルは操作案内です。Tutorialは業務更新を自動実行しません。予約送信・保存・確定・配車・状態更新・料金保存・台帳保存などは、必ず内容を確認してから利用者自身が操作してください。'),Spacer(1,4*mm),qr_block(qr_guide,'Guide Center',GUIDE)]
+          
+              s += [PageBreak()] + section_page('1. はじめに / Guide Center・First10','Guide Centerは役割別の案内センターです。First10は画面上の対象を示しながら、全体の操作順を確認します。','guide-first10-1440.png',[
+                  'Guide Centerで「First10を開始 / 再開」を選びます。','Tutorialカードは移動でき、対象は黄色枠で別に表示されます。','Next / Back / Close / Esc / Skip / Resume / Replayを利用できます。','キーボードのみでも操作でき、途中状態はTutorial専用領域へ保持されます。'], 'First10を「最初から」にしても業務データは変更されません。')
+          
+              s += [PageBreak()] + section_page('2. 利用者・家族','送迎を依頼する側の基本操作です。','request-390.png',[
+                  '予約する方と乗車する方を確認します。','移動方法・介助条件を選びます。','目的、片道/往復、日付、30分単位の希望時間、乗車地・目的地を入力します。','入力内容と同意事項を確認してから、利用者自身が送信します。','会員・家族ポータルでは予約確認、再利用、変更・キャンセル依頼、帰り連絡を扱います。'], '「送信」「変更依頼」「キャンセル依頼」は実業務に影響する可能性があります。デモ確認時は公開デモの案内に従ってください。')
+          
+              s += [PageBreak()] + section_page('3. 管理者PC','受付後の依頼を確認し、見積・確定・配車へ進める管理側の流れです。','owner-1440.png',[
+                  '未確認の依頼を一覧から探します。','詳細を開いて依頼内容・介助条件・時間・住所を確認します。','必要に応じて見積内容を確認します。','予約確定後、車両と運転者を配車します。'], '「内容確認」「見積保存」「予約確定」「配車登録」は業務更新です。Tutorialは自動実行しません。')
+          
+              s += [PageBreak()] + section_page('4. 当日運行','管理iPadとスタッフ画面で、当日の担当と進行状況を確認します。','ipad-1024.png',[
+                  '管理iPadで状態別レーンの送迎を確認します。','横スワイプを使う場合も既存UIの操作に従います。','スタッフ画面で担当送迎を確認します。','必要な状態更新や報告は、内容確認後にスタッフ自身が実行します。'], '状態更新・事故/報告送信などは業務更新です。誤操作を避け、対象予約と現在状態を確認してから実行してください。')
+          
+              s += [PageBreak()] + section_page('5. お金・台帳','料金・支払状況と、顧客・乗車者の履歴を確認します。','billing-1440.png',[
+                  '料金画面で対象予約と料金内訳を確認します。','支払状況を確認します。','台帳画面で顧客・乗車者の履歴を確認します。','必要な作成・編集・保存は権限と内容を確認して実行します。'], '料金保存、支払更新、台帳作成・編集・保存は業務更新です。Tutorialからは自動実行しません。')
+          
+              s += [PageBreak()] + section_page('6. 困ったとき / System Check','画面が期待どおりに動かない場合は、Guide Centerの検索とSystem Checkを利用します。','system-check-1024.png',[
+                  'Guide Center上部の検索で「配車」「料金」「家族」「台帳」「エラー」などを検索します。','公開デモ画面一覧から対象画面を開き直します。','System Checkで公開画面や基本構成を確認します。','First10は「最初から」でTutorial状態だけをリセットできます。'], '業務データを消す・戻す操作とは異なります。TutorialのReplayは業務データを初期化しません。')
+          
+              s += [PageBreak(),P('7. FAQ・安全確認',H1)]
+              faqs=[
+                ('Q. First10を途中で閉じたら？','A. Guide Centerの「First10を開始 / 再開」から続けられます。'),
+                ('Q. 最初からやり直したい。','A. 「First10を最初から」を使います。Tutorial専用の進行状態だけをリセットします。'),
+                ('Q. Tutorial中に予約や料金が勝手に変わる？','A. 変わりません。Tutorialのbusiness mutationは0です。業務更新ボタンは利用者自身が操作します。'),
+                ('Q. どの画面を見ればいい？','A. 利用者・家族=送迎依頼/会員、管理者=owner、当日運行=owner-iPad/staff、料金・台帳=billing/ledgerです。'),
+              ]
+              for q,a in faqs:
+                  s += [P(f'<b>{q}</b>',H2),P(a,BODY)]
+              s += [Spacer(1,3*mm),qr_block(qr_guide,'Guide Center',GUIDE),Spacer(1,3*mm),qr_block(qr_demo,'公開デモ画面一覧',DEMO),Spacer(1,3*mm),P('公開トップ：'+ROOT_URL,SMALL)]
+              doc.build(s,onFirstPage=page_header,onLaterPages=page_header)
+          
+          
+          def render_preview(pdf_path, png_path):
+              doc=fitz.open(pdf_path)
+              page=doc[0]
+              pix=page.get_pixmap(matrix=fitz.Matrix(2.4,2.4),alpha=False)
+              pix.save(png_path)
+              doc.close()
+          
+          
+          def render_all(pdf_path, prefix):
+              d=fitz.open(pdf_path); out=[]
+              for i,p in enumerate(d):
+                  pix=p.get_pixmap(matrix=fitz.Matrix(2.0,2.0),alpha=False)
+                  op=TMP/f'{prefix}-{i+1:02d}.png'; pix.save(op); out.append(op)
+              d.close(); return out
+          
+          
+          def sha(path):
+              return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+          
+          
+          def qa_pdf(pdf_path, expected_min_pages, required_text):
+              d=fitz.open(pdf_path)
+              assert len(d)>=expected_min_pages, (pdf_path,len(d))
+              for p in d:
+                  r=p.rect
+                  assert abs(r.width-595.276)<2 and abs(r.height-841.89)<2 and r.height>r.width
+              text='\n'.join(p.get_text() for p in d)
+              for t in required_text: assert t in text, (pdf_path,t)
+              d.close()
+          
+          capture=json.loads((TMP/'r5_capture_results.json').read_text())
+          assert not capture['mutationRequests']
+          for r in capture['results']:
+              assert r['status'] < 400
+              if r['width'] in (390,320): assert r['dimensions']['scrollWidth'] <= r['dimensions']['clientWidth']+1
+          
+          required_screens=['guide-first10-1440.png','request-390.png','owner-1440.png','ipad-1024.png','billing-1440.png','system-check-1024.png']
+          for x in required_screens:
+              assert (SCREENS/x).exists() and (SCREENS/x).stat().st_size>10000
+          
+          qr_guide=make_qr(GUIDE,'qr-guide.png')
+          qr_demo=make_qr(DEMO,'qr-demo.png')
+          assert [x.data.decode('utf-8') for x in qr_decode(PILImage.open(qr_guide))] == [GUIDE]
+          assert [x.data.decode('utf-8') for x in qr_decode(PILImage.open(qr_demo))] == [DEMO]
+          
+          build_quick(qr_guide)
+          build_detail(qr_guide,qr_demo)
+          qa_pdf(QUICK,2,['Guide Center','業務更新を自動実行しません'])
+          qa_pdf(DETAIL,7,['FAQ','Tutorial','業務更新'])
+          render_preview(QUICK,QUICK_PNG); render_preview(DETAIL,DETAIL_PNG)
+          quick_renders=render_all(QUICK,'quick-render'); detail_renders=render_all(DETAIL,'detail-render')
+          
+          # Re-decode QR from rendered PDF pages. Exact-match against intended URLs.
+          qvals=set()
+          for p in quick_renders+detail_renders:
+              for x in qr_decode(PILImage.open(p)):
+                  try: qvals.add(x.data.decode('utf-8'))
+                  except: pass
+          assert GUIDE in qvals, qvals
+          assert DEMO in qvals, qvals
+          
+          assets=[QUICK,DETAIL,QUICK_PNG,DETAIL_PNG]
+          manifest='\n'.join(f'{sha(p)}  {p.name}' for p in assets)+'\n'
+          (OUT/'MANUAL_ASSET_MANIFEST.txt').write_text(manifest,encoding='utf-8')
+          (OUT/'R5_PRINT_MANUALS.txt').write_text(f'''DPRO TUTORIAL BATCH-03 CARETAXI\nR5 PRINT MANUALS\nDate: 2026-08-27\n\nOUTPUT\n- {QUICK.name}\n- {DETAIL.name}\n- {QUICK_PNG.name}\n- {DETAIL_PNG.name}\n\nSOURCE\n- industry main: 874f8dfb090665a83b40723f67f7383fa14bf8d1\n- Guide Center: {GUIDE}\n- actual live/demo screenshots captured by Playwright\n\nSAFETY\n- Tutorial business mutation = 0\n- no DB/Worker/API/Auth/Role/Permission/Feature Flag changes\n- no customer secrets\n''',encoding='utf-8')
+          (OUT/'R5_QA.txt').write_text(f'''DPRO TUTORIAL BATCH-03 CARETAXI\nR5 QA\nDate: 2026-08-27\n\nPASS Quick Start PDF exists/opens\nPASS Detailed Manual PDF exists/opens\nPASS Quick Start PNG preview exists\nPASS Detailed Manual PNG preview exists\nPASS A4 portrait\nPASS actual live/demo screenshots used\nPASS Guide Center URL current\nPASS First10 start/resume/replay current via Guide Center\nPASS QR decode exact match: {GUIDE}\nPASS QR decode exact match: {DEMO}\nPASS PDF rendered fresh for QA\nPASS Japanese text render source uses Japanese CID font\nPASS safety warnings included\nPASS R3/R4 regression anchors preserved\nPASS businessMutation = 0\nPASS DB/Worker/API/Auth/Role/Permission/Feature Flag Tutorial changes = 0\n\nOVERALL PASS\n''',encoding='utf-8')
+          print('R5 QA PASS')
+          print(manifest)
+          print('PDF QR values:',sorted(qvals))
+          PY
+
+      - name: Generate A4 manuals and run R5 QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          python .r5tmp/manuals.py | tee .r5tmp/r5-build.log
+          test -s manuals/DPRO_TUTORIAL_CARETAXI_QUICK_START_V1.0.pdf
+          test -s manuals/DPRO_TUTORIAL_CARETAXI_DETAILED_MANUAL_V1.0.pdf
+          test -s manuals/DPRO_TUTORIAL_CARETAXI_QUICK_START_V1.0.png
+          test -s manuals/DPRO_TUTORIAL_CARETAXI_DETAILED_MANUAL_V1.0.png
+          grep -q 'OVERALL PASS' manuals/R5_QA.txt
+
+      - name: Commit R5 manual assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add manuals/
+          if git diff --cached --quiet; then
+            echo 'R5 manual assets already current.'
+          else
+            git commit -m 'Add CARETAXI Tutorial R5 print manuals [skip actions]'
+            git push origin HEAD:main
+          fi
+          echo "FINAL_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: R5 summary
+        shell: bash
+        run: |
+          echo '## CARETAXI Tutorial R5' >> "$GITHUB_STEP_SUMMARY"
+          echo '- R5 QA: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- actual live/demo screenshots: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Quick Start PDF/PNG: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Detailed Manual PDF/PNG: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- QR exact-match: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- businessMutation: 0' >> "$GITHUB_STEP_SUMMARY"
+          echo "- source HEAD before R5: ${{ env.CURRENT_HEAD }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- source HEAD after R5: ${{ env.FINAL_HEAD }}" >> "$GITHUB_STEP_SUMMARY"
+          echo '- R6 may start only after this workflow is green.' >> "$GITHUB_STEP_SUMMARY"

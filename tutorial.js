@@ -1,4 +1,4 @@
-/* DPRO TUTORIAL STANDARD V1.1 / CARETAXI R3 FIRST10 */
+/* DPRO TUTORIAL STANDARD V1.1 / CARETAXI R3 FIRST10 + R4 GUIDE CENTER ENTRY */
 (() => {
   "use strict";
   if (window.DPRO_CARETAXI_TUTORIAL) return;
@@ -44,7 +44,7 @@
     if(q("#dpro-tutorial-card")) return;
     const highlight=document.createElement("div"); highlight.id="dpro-tutorial-highlight"; highlight.setAttribute("aria-hidden","true");
     const launcher=document.createElement("button"); launcher.id="dpro-tutorial-launcher"; launcher.type="button"; launcher.textContent="操作ガイド"; launcher.setAttribute("aria-haspopup","menu"); launcher.setAttribute("aria-expanded","false");
-    const menu=document.createElement("div"); menu.id="dpro-tutorial-menu"; menu.setAttribute("role","menu"); menu.innerHTML=`<button type="button" class="primary" data-tutorial-menu="resume">First10を${state.status==="idle"?"開始":"再開"}</button><button type="button" data-tutorial-menu="replay">最初からやり直す</button><a href="./demo-guide.html">公開デモ画面一覧</a>`;
+    const menu=document.createElement("div"); menu.id="dpro-tutorial-menu"; menu.setAttribute("role","menu"); menu.innerHTML=`<button type="button" class="primary" data-tutorial-menu="resume">First10を${state.status==="idle"?"開始":"再開"}</button><button type="button" data-tutorial-menu="replay">最初からやり直す</button><a href="./guide-center.html">Guide Center</a><a href="./demo-guide.html">公開デモ画面一覧</a>`;
     const card=document.createElement("section"); card.id="dpro-tutorial-card"; card.setAttribute("aria-label","DPRO 操作Tutorial"); card.innerHTML=`<div id="dpro-tutorial-drag-handle" class="dpro-tutorial-handle" role="button" tabindex="0" aria-label="Tutorialカードを移動。矢印キーでも移動できます"><div><strong>移動</strong><span>ドラッグ / 矢印キー</span></div><kbd>STANDARD V1.1</kbd><button class="dpro-tutorial-close" type="button" aria-label="Tutorialを閉じる">×</button></div><div id="dpro-tutorial-content"></div>`;
     document.body.append(highlight,launcher,menu,card);
     bindUi();

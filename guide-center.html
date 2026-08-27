@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Guide Center | DPRO 介護タクシー LINE</title>
+<meta name="description" content="DPRO 介護タクシー LINE の操作ガイド。First10、利用者・家族、管理者PC、当日運行、料金・台帳、トラブル対応をまとめています。">
+<style>
+:root{--ink:#172033;--muted:#5e6b7a;--line:#dfe5ec;--soft:#f6f8fb;--brand:#1857b6;--warn:#fff7df;--warn-line:#e4b64c;--ok:#eef8f2;--radius:16px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;color:var(--ink);background:#fff;line-height:1.7;overflow-wrap:anywhere}a{color:var(--brand)}button,input{font:inherit}button{cursor:pointer}
+.skip{position:absolute;left:8px;top:-80px;background:#fff;color:#111;padding:10px 14px;border:2px solid #111;border-radius:10px;z-index:30}.skip:focus{top:8px}
+header{border-bottom:1px solid var(--line);background:linear-gradient(180deg,#f7fbff,#fff)}.hero{max-width:1120px;margin:auto;padding:34px 20px 26px}.eyebrow{font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--brand)}h1{font-size:clamp(28px,5vw,44px);line-height:1.2;margin:8px 0 12px}.lead{max-width:760px;color:var(--muted);margin:0}.status{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pill{display:inline-flex;align-items:center;min-height:32px;padding:5px 10px;border-radius:999px;background:var(--soft);font-size:13px;font-weight:700}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{appearance:none;border:1px solid #bfc9d5;background:#fff;color:var(--ink);border-radius:12px;padding:11px 16px;font-weight:800;text-decoration:none;min-height:46px;display:inline-flex;align-items:center;justify-content:center}.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}.btn:hover{filter:brightness(.98)}
+main{max-width:1120px;margin:auto;padding:24px 20px 60px}.toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end;margin:4px 0 24px}.search label{display:block;font-weight:800;margin-bottom:6px}.search input{width:100%;min-height:46px;border:1px solid #bfc9d5;border-radius:12px;padding:10px 12px;background:#fff}.toolbar .btn{white-space:nowrap}
+.navgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:28px}.navcard{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff}.navcard strong{display:block;margin-bottom:3px}.navcard span{color:var(--muted);font-size:14px}.navcard:hover{border-color:#9eb9dd;background:#fbfdff}
+section.guide{scroll-margin-top:20px;border-top:1px solid var(--line);padding:30px 0 4px}.section-head{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}.section-head h2{margin:0;font-size:clamp(22px,4vw,30px);line-height:1.35}.section-head p{margin:6px 0 0;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}.card{border:1px solid var(--line);border-radius:var(--radius);padding:18px;background:#fff}.card h3{margin:0 0 8px;font-size:18px}.card p{margin:0 0 10px}.steps{margin:10px 0 0;padding-left:1.4em}.steps li+li{margin-top:7px}.links{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.links a{display:inline-flex;align-items:center;min-height:40px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;text-decoration:none;background:var(--soft)}
+.notice{border:1px solid var(--warn-line);background:var(--warn);border-radius:14px;padding:15px 16px;margin-top:16px}.notice strong{display:block;margin-bottom:3px}.safe{border-color:#bcdcc8;background:var(--ok)}
+.mutating{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.mutating div{border:1px solid #ecd7a1;background:#fffdf7;border-radius:12px;padding:12px}.mutating strong{display:block}.small{font-size:13px;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:22px 20px;color:var(--muted);font-size:13px}.footer-inner{max-width:1120px;margin:auto}
+[hidden]{display:none!important}:focus-visible{outline:3px solid #ff9f1a;outline-offset:3px}
+@media(max-width:760px){.hero,main{padding-left:14px;padding-right:14px}.toolbar{grid-template-columns:1fr}.toolbar>.btn{justify-self:start}.navgrid,.cards,.mutating{grid-template-columns:1fr}.actions .btn{flex:1 1 160px}.section-head{display:block}}
+@media(max-width:390px){.hero{padding-top:26px}.actions{display:grid;grid-template-columns:1fr}.actions .btn{width:100%}.navcard,.card{padding:14px}.btn{max-width:100%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+<link rel="stylesheet" href="./tutorial.css?v=CARETAXI-R4-20260827">
+<script src="./tutorial.js?v=CARETAXI-R4-20260827" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<header>
+  <div class="hero">
+    <div class="eyebrow">DPRO TUTORIAL STANDARD V1.1 / CARETAXI R4</div>
+    <h1>Guide Center</h1>
+    <p class="lead">介護タクシーの「依頼する人」「管理する人」「当日運行する人」それぞれの操作を、業務更新を自動実行せずに確認できる案内センターです。</p>
+    <div class="status" aria-live="polite"><span class="pill" id="first10Status">First10 状態を確認中</span><span class="pill">業務データ自動更新 0</span></div>
+    <div class="actions" aria-label="First10操作">
+      <button class="btn primary" id="first10Resume" type="button">First10を開始 / 再開</button>
+      <button class="btn" id="first10Replay" type="button">First10を最初から</button>
+      <a class="btn" href="./demo-guide.html">公開デモ画面一覧</a>
+    </div>
+  </div>
+</header>
+<main id="main">
+  <div class="toolbar">
+    <div class="search"><label for="guideSearch">ガイドを検索</label><input id="guideSearch" type="search" inputmode="search" placeholder="例：配車、料金、家族、台帳、エラー" autocomplete="off"></div>
+    <a class="btn" href="./system-check.html">System Checkを開く</a>
+  </div>
+
+  <nav class="navgrid" aria-label="Guide Centerカテゴリ">
+    <a class="navcard" href="#start"><strong>はじめに</strong><span>First10と全体の流れ</span></a>
+    <a class="navcard" href="#requester"><strong>利用者・家族</strong><span>送迎依頼と会員・家族ポータル</span></a>
+    <a class="navcard" href="#owner"><strong>管理者PC</strong><span>受付・見積・予約確定・配車</span></a>
+    <a class="navcard" href="#day"><strong>当日運行</strong><span>iPad配車とスタッフ画面</span></a>
+    <a class="navcard" href="#money"><strong>お金・台帳</strong><span>料金・支払・顧客履歴</span></a>
+    <a class="navcard" href="#trouble"><strong>困ったとき</strong><span>System Checkと操作の戻り方</span></a>
+  </nav>
+
+  <section class="guide" id="start" data-search="はじめに first10 tutorial 全体 デモ 操作ガイド">
+    <div class="section-head"><div><h2>はじめに</h2><p>まず10ステップで「依頼 → 管理 → 当日運行 → 料金 → 台帳」のつながりを確認します。</p></div></div>
+    <div class="cards">
+      <article class="card"><h3>First10</h3><p>画面上の黄色枠で対象を示す、移動できるTutorialカードです。途中で閉じてもブラウザ内のTutorial専用状態から再開できます。</p><div class="links"><button class="btn primary" type="button" data-guide-action="resume">開始 / 再開</button><button class="btn" type="button" data-guide-action="replay">最初から</button></div></article>
+      <article class="card"><h3>5画面の全体像</h3><p>利用者・家族、管理者PC、管理iPad、料金・支払、顧客・乗車者台帳の役割を先に確認できます。</p><div class="links"><a href="./demo-guide.html">公開デモ画面一覧</a></div></article>
+    </div>
+    <div class="notice safe"><strong>安全なガイドです</strong>Guide CenterとFirst10は、予約送信・見積保存・予約確定・配車登録・料金保存・台帳保存などの業務操作を自動実行しません。</div>
+  </section>
+
+  <section class="guide" id="requester" data-search="利用者 家族 予約 依頼 乗車 介助 車いす ストレッチャー 会員 member">
+    <div class="section-head"><div><h2>利用者・家族</h2><p>送迎を依頼する側の基本操作です。</p></div></div>
+    <div class="cards">
+      <article class="card"><h3>送迎依頼 4ステップ</h3><ol class="steps"><li>予約する方を確認</li><li>乗車する方・移動方法・介助条件を入力</li><li>目的・片道/往復・日付・30分単位の希望時間・住所を入力</li><li>確認・同意後、利用者自身が送信</li></ol><div class="links"><a href="./index.html">送迎依頼画面</a></div></article>
+      <article class="card"><h3>会員・家族ポータル</h3><p>既存予約の確認、再利用、変更・キャンセル依頼、帰り連絡などを扱います。</p><div class="links"><a href="./member.html">会員・家族ポータル</a></div></article>
+    </div>
+  </section>
+
+  <section class="guide" id="owner" data-search="管理者 pc 受付 未確認 見積 予約確定 配車 電話 owner 1234">
+    <div class="section-head"><div><h2>管理者PC</h2><p>依頼を受けてから配車するまでの管理側の流れです。</p></div></div>
+    <div class="cards">
+      <article class="card"><h3>受付 → 見積 → 確定 → 配車</h3><ol class="steps"><li>未確認の依頼を一覧から探す</li><li>詳細を開いて内容を確認</li><li>必要な見積内容を確認</li><li>予約確定後、車両・運転者を配車</li></ol><div class="links"><a href="./owner.html?demo=1">管理者PC</a></div></article>
+      <article class="card"><h3>管理コード</h3><p>デモ環境の操作確認では既存の管理コード案内に従います。Guide Centerは認証・Role・Permissionを変更しません。</p><p class="small">管理コード入力やログインは既存画面の操作です。</p></article>
+    </div>
+    <div class="notice"><strong>業務更新ボタンの注意</strong>「内容確認」「見積保存」「予約確定」「配車登録」は実業務を更新する操作です。Guide Centerから自動で押すことはありません。</div>
+  </section>
+
+  <section class="guide" id="day" data-search="当日 運行 ipad 配車 スタッフ 状態 dispatch staff 横スワイプ">
+    <div class="section-head"><div><h2>当日運行</h2><p>管理iPadとスタッフ画面で当日の送迎状況を追います。</p></div></div>
+    <div class="cards">
+      <article class="card"><h3>管理iPad</h3><p>状態別レーンのボードで当日の送迎を確認します。横スワイプ操作は既存UIのまま利用できます。</p><div class="links"><a href="./owner-ipad.html?demo=1">管理iPad</a></div></article>
+      <article class="card"><h3>スタッフ当日運行</h3><p>担当送迎の確認や状態更新、必要な報告を行う既存画面です。</p><div class="links"><a href="./staff.html?demo=1">スタッフ画面</a></div></article>
+    </div>
+    <div class="notice"><strong>状態更新は実業務です</strong>当日運行の状態変更・報告は利用者が意図して行う操作です。Guide Centerは変更を実行しません。</div>
+  </section>
+
+  <section class="guide" id="money" data-search="料金 支払 入金 billing 台帳 顧客 乗車者 ledger 履歴 検索">
+    <div class="section-head"><div><h2>お金・台帳</h2><p>料金・支払状況と、顧客/乗車者の利用履歴を確認します。</p></div></div>
+    <div class="cards">
+      <article class="card"><h3>料金・支払管理</h3><p>送迎予約を選び、見積内訳・確定料金・支払状況を確認します。未払い / 一部入金 / 支払済みで絞り込めます。</p><div class="links"><a href="./billing.html?demo=1">料金・支払管理</a></div></article>
+      <article class="card"><h3>顧客・乗車者台帳</h3><p>氏名・ふりがな・電話番号・台帳番号・住所から検索し、基本情報やよく行く場所、送迎履歴を確認します。</p><div class="links"><a href="./ledger.html?demo=1">顧客・乗車者台帳</a></div></article>
+    </div>
+    <div class="notice"><strong>保存・入金登録・台帳編集は実業務です</strong>Guide Centerは閲覧箇所を案内するだけで、料金や台帳データを保存しません。</div>
+  </section>
+
+  <section class="guide" id="trouble" data-search="困った system check エラー 接続 api worker ページ デモ 戻る troubleshooting">
+    <div class="section-head"><div><h2>困ったとき</h2><p>表示や接続、操作の迷いを切り分けます。</p></div></div>
+    <div class="cards">
+      <article class="card"><h3>System Check</h3><p>公開画面・API接続などの既存チェック画面が必要な場合はSystem Checkを利用します。</p><div class="links"><a href="./system-check.html">System Check</a></div></article>
+      <article class="card"><h3>操作を見失った</h3><ol class="steps"><li>画面右下の「操作ガイド」を開く</li><li>First10を再開、またはGuide Centerへ戻る</li><li>全体像だけ確認したい場合は公開デモ画面一覧へ</li></ol><div class="links"><a href="./demo-guide.html">公開デモ画面一覧</a><a href="#start">First10案内へ</a></div></article>
+    </div>
+    <div class="notice safe"><strong>Esc / キーボード</strong>First10カードはEscで閉じられ、移動ハンドルは矢印キーで移動できます。Guide Centerのリンク・ボタンはTabキーで移動できます。</div>
+  </section>
+
+  <section class="guide" id="mutating" data-search="注意 破壊 更新 保存 確定 配車 入金 編集 キャンセル mutation destructive">
+    <div class="section-head"><div><h2>業務更新を伴う操作</h2><p>以下は説明のみです。Guide Center / First10から自動実行しません。</p></div></div>
+    <div class="mutating"><div><strong>送迎依頼の送信</strong><span class="small">利用者が確認・同意して送信</span></div><div><strong>見積・予約確定・配車</strong><span class="small">管理者が意図して実行</span></div><div><strong>当日状態更新・報告</strong><span class="small">担当者が意図して実行</span></div><div><strong>料金保存・入金登録・台帳編集</strong><span class="small">管理側が意図して実行</span></div></div>
+  </section>
+</main>
+<footer><div class="footer-inner">DPRO 介護タクシー LINE Guide Center / CARETAXI-R4-GUIDE-CENTER-V1.0-20260827<br>このGuide Centerはブラウザ内の案内機能です。DB / Worker / API / Auth / Role / Permission / Feature Flagを変更しません。</div></footer>
+<script>
+(() => {
+  'use strict';
+  const STATE='dpro_caretaxi_tutorial_first10_v1';
+  const status=document.getElementById('first10Status');
+  const search=document.getElementById('guideSearch');
+  const sections=[...document.querySelectorAll('section.guide')];
+  function api(){return window.DPRO_CARETAXI_TUTORIAL||null;}
+  function state(){try{return api()?.getState?.()||JSON.parse(localStorage.getItem(STATE)||'null')}catch{return null}}
+  function paint(){const s=state();if(!status)return;if(!s){status.textContent='First10 未開始';return;}const n=Math.max(1,Math.min(10,Number(s.currentStep)||1));status.textContent=s.status==='completed'?'First10 完了':s.status==='idle'?'First10 未開始':`First10 ${n}/10・${s.status==='paused'?'一時停止':'進行中'}`;}
+  function resume(){const a=api();if(a?.start)a.start();else location.href='./demo-guide.html?tutorial=1'}
+  function replay(){const a=api();if(a?.replay)a.replay();else location.href='./demo-guide.html?tutorial=1'}
+  document.getElementById('first10Resume').addEventListener('click',resume);
+  document.getElementById('first10Replay').addEventListener('click',replay);
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-guide-action]');if(!b)return;b.dataset.guideAction==='replay'?replay():resume()});
+  search.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();sections.forEach(s=>{const hay=(s.dataset.search+' '+s.textContent).toLowerCase();s.hidden=!!q&&!hay.includes(q)})});
+  window.addEventListener('pageshow',paint);document.addEventListener('DOMContentLoaded',()=>setTimeout(paint,0));
+})();
+</script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 name: CARETAXI Tutorial R3 Deploy + QA
+# QA FIX V1.4 2026-08-27: mobile drag validates vertical movement; keyboard uses ArrowUp
 
 on:
   push:
@@ -139,8 +140,8 @@ jobs:
             const handle=p.locator('#dpro-tutorial-drag-handle'),before=await p.locator('#dpro-tutorial-card').boundingBox(),hb=await handle.boundingBox();
             await p.mouse.move(hb.x+20,hb.y+20);await p.mouse.down();await p.mouse.move(hb.x-70,hb.y-80,{steps:8});await p.mouse.up();const after=await p.locator('#dpro-tutorial-card').boundingBox();
             const v=await p.evaluate(()=>({w:visualViewport?.width||innerWidth,h:visualViewport?.height||innerHeight}));
-            add('pointer_drag',Math.abs(after.x-before.x)>20&&after.x>=0&&after.y>=0&&after.x+after.width<=v.w+1&&after.y+after.height<=v.h+1,{before,after,v});
-            await handle.focus();const kb0=await p.locator('#dpro-tutorial-card').boundingBox();await p.keyboard.press('ArrowLeft');const kb1=await p.locator('#dpro-tutorial-card').boundingBox();add('keyboard_drag',kb1.x<kb0.x,{kb0,kb1});
+            add('pointer_drag',(Math.abs(after.x-before.x)>20||Math.abs(after.y-before.y)>20)&&after.x>=0&&after.y>=0&&after.x+after.width<=v.w+1&&after.y+after.height<=v.h+1,{before,after,v});
+            await handle.focus();const kb0=await p.locator('#dpro-tutorial-card').boundingBox();await p.keyboard.press('ArrowUp');const kb1=await p.locator('#dpro-tutorial-card').boundingBox();add('keyboard_drag',kb1.y<kb0.y,{kb0,kb1});
             const btn=p.locator('.dpro-tutorial-next'),bb=await btn.boundingBox(),c0=await p.locator('#dpro-tutorial-card').boundingBox();await p.mouse.move(bb.x+bb.width/2,bb.y+bb.height/2);await p.mouse.down();await p.mouse.move(bb.x-50,bb.y-50);await p.mouse.up();await p.waitForTimeout(100);const c1=await p.locator('#dpro-tutorial-card').boundingBox();add('no_drag_from_button',Math.abs(c1.x-c0.x)<2&&Math.abs(c1.y-c0.y)<2,{c0,c1});
             await x.c.close();
           }

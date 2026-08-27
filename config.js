@@ -47,3 +47,18 @@ window.CARETAXI_CONFIG = Object.freeze({
   STAFF_SESSION_KEY: "dpro_caretaxi_staff_session_v1",
   REPEAT_PREFILL_KEY: "dpro_caretaxi_repeat_prefill_v1"
 });
+
+/* DPRO TUTORIAL R3 client-only loader. Business/API behavior is untouched. */
+(() => {
+  "use strict";
+  if (window.__DPRO_CARETAXI_TUTORIAL_LOADER__) return;
+  window.__DPRO_CARETAXI_TUTORIAL_LOADER__ = true;
+  const version = "CARETAXI-R3-20260827";
+  const css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = `./tutorial.css?v=${encodeURIComponent(version)}`;
+  const js = document.createElement("script");
+  js.src = `./tutorial.js?v=${encodeURIComponent(version)}`;
+  js.defer = true;
+  document.head.append(css, js);
+})();

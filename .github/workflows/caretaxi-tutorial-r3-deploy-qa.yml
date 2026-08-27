@@ -71,6 +71,7 @@ jobs:
             'mobile_width_guard': 'calc(100vw - 24px)' in css,
             'esc_present': 'e.key==="Escape"' in js,
             'replay_present': 'function replay()' in js,
+            'menu_id_selector_fixed': '#dpro-tutorial-menu' in css and '.dpro-tutorial-menu' not in css,
           }
           bad=[k for k,v in checks.items() if not v]
           print(checks)
@@ -158,13 +159,44 @@ jobs:
           }
           {
             const c=await ctx(1024,800),p=await c.newPage();
-            await p.addInitScript(k=>localStorage.setItem(k,JSON.stringify({tutorialId:'CARETAXI_FIRST10_V1',version:1,currentStep:1,status:'active',completedSteps:[],skippedSteps:[],updatedAt:Date.now()})),STATE);
+            // Seed step 1 only once. page.addInitScript runs again after every navigation,
+            // so a sessionStorage guard is required to avoid resetting cross-page progress.
+            await p.addInitScript(k=>{
+              const seed='dpro_caretaxi_tutorial_r3_qa_seed_v13';
+              if(sessionStorage.getItem(seed)==='1') return;
+              localStorage.setItem(k,JSON.stringify({tutorialId:'CARETAXI_FIRST10_V1',version:1,currentStep:1,status:'active',completedSteps:[],skippedSteps:[],updatedAt:Date.now()}));
+              sessionStorage.setItem(seed,'1');
+            },STATE);
             await p.goto(BASE+'demo-guide.html?tutorial=1&kbd='+Date.now(),{waitUntil:'domcontentloaded'});await p.locator('#dpro-tutorial-card[data-open="1"]').waitFor();
-            for(let expected=2;expected<=10;expected++){
-              await p.locator('.dpro-tutorial-next').focus();await p.keyboard.press('Enter');await p.waitForLoadState('domcontentloaded').catch(()=>{});await p.locator('#dpro-tutorial-card[data-open="1"]').waitFor({timeout:15000});const s=await p.evaluate(k=>JSON.parse(localStorage.getItem(k)),STATE);if(s.currentStep!==expected)throw new Error(`keyboard flow expected ${expected}, got ${s.currentStep}`);
+            const expectedPages={2:'index.html',3:'index.html',4:'index.html',5:'index.html',6:'owner.html',7:'owner.html',8:'owner-ipad.html',9:'billing.html',10:'ledger.html'};
+            try{
+              for(let expected=2;expected<=10;expected++){
+                const targetPage=expectedPages[expected];
+                const currentPage=(new URL(p.url()).pathname.split('/').pop()||'index.html').toLowerCase();
+                await p.locator('.dpro-tutorial-next').focus();
+                if(currentPage!==targetPage){
+                  await Promise.all([
+                    p.waitForURL(url=>(url.pathname.split('/').pop()||'index.html').toLowerCase()===targetPage,{timeout:15000}),
+                    p.keyboard.press('Enter')
+                  ]);
+                  await p.waitForLoadState('domcontentloaded');
+                }else{
+                  await p.keyboard.press('Enter');
+                }
+                await p.locator('#dpro-tutorial-card[data-open="1"]').waitFor({timeout:15000});
+                const s=await p.evaluate(k=>JSON.parse(localStorage.getItem(k)),STATE);
+                if(s.currentStep!==expected) throw new Error(`keyboard flow expected ${expected}, got ${s.currentStep}`);
+              }
+              await p.locator('.dpro-tutorial-next').focus();await p.keyboard.press('Enter');await p.waitForTimeout(100);
+              const end=await p.evaluate(k=>JSON.parse(localStorage.getItem(k)),STATE);
+              add('keyboard_end_to_end',end.status==='completed'&&end.currentStep===10,{state:end});
+              add('cross_page_resume',end.completedSteps.includes(1)&&end.completedSteps.includes(9),{state:end});
+            }catch(e){
+              const error=String(e);
+              add('keyboard_end_to_end',false,{error});
+              add('cross_page_resume',false,{error});
             }
-            await p.locator('.dpro-tutorial-next').focus();await p.keyboard.press('Enter');await p.waitForTimeout(100);const end=await p.evaluate(k=>JSON.parse(localStorage.getItem(k)),STATE);add('keyboard_end_to_end',end.status==='completed'&&end.currentStep===10,{state:end});
-            add('cross_page_resume',end.completedSteps.includes(1)&&end.completedSteps.includes(9),{state:end});await c.close();
+            await c.close();
           }
           await browser.close();
           const ok=results.every(r=>r.pass); const report={ok,systemCode:'CARETAXI',phase:'R3',version:'V1.0',checkedAt:new Date().toISOString(),businessMutation:0,results};fs.writeFileSync(`${out}/R3_QA.json`,JSON.stringify(report,null,2));fs.writeFileSync(`${out}/R3_QA.txt`,results.map(r=>`${r.pass?'PASS':'FAIL'} ${r.name}`).join('\n')+`\nOVERALL ${ok?'PASS':'FAIL'}\nBUSINESS_MUTATION 0\n`);console.log(fs.readFileSync(`${out}/R3_QA.txt`,'utf8'));if(!ok)process.exitCode=1;
